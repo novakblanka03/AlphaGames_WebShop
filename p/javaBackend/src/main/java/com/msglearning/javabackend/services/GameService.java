@@ -1,7 +1,9 @@
 package com.msglearning.javabackend.services;
 
+import com.msglearning.javabackend.converters.GameConverter;
 import com.msglearning.javabackend.entity.Game;
 import com.msglearning.javabackend.repositories.GameRepository;
+import com.msglearning.javabackend.to.GameTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,40 +15,52 @@ import java.util.Optional;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final GameConverter gameConverter;
 
-    public GameService(GameRepository gameRepository) {
+    public GameService(GameRepository gameRepository, GameConverter gameConverter) {
         this.gameRepository = gameRepository;
+        this.gameConverter = gameConverter;
     }
 
-    public List<Game> getAllGames() {
-        return gameRepository.findAll();
+    public List<GameTO> getAllGames() {
+        List<Game> games = gameRepository.findAll();
+        return gameConverter.convertToTOList(games);
     }
 
-    public ResponseEntity<Game> getGameById(Long id) {
+    public ResponseEntity<GameTO> getGameById(Long id) {
         Optional<Game> optionalGame = gameRepository.findById(id);
-        return optionalGame.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        if (optionalGame.isPresent()) {
+            Game game = optionalGame.get();
+            GameTO gameTO = gameConverter.convertToTO(game);
+            return ResponseEntity.ok(gameTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     public boolean existsGameByName(String name) {
         return gameRepository.existsByName(name);
     }
 
-    public ResponseEntity<Game> saveGame(Game game) {
+    public ResponseEntity<GameTO> saveGame(GameTO gameTO) {
+        Game game = gameConverter.convertToEntity(gameTO);
         Game savedGame = gameRepository.save(game);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedGame);
+        GameTO savedGameTO = gameConverter.convertToTO(savedGame);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedGameTO);
     }
 
-    public ResponseEntity<Game> updateGame(Long id, Game game) {
+    public ResponseEntity<GameTO> updateGame(Long id, GameTO gameTO) {
         Optional<Game> optionalGame = gameRepository.findById(id);
         if (optionalGame.isPresent()) {
             Game existingGame = optionalGame.get();
             // Update game attributes
-            existingGame.setName(game.getName());
-            existingGame.setDescription(game.getDescription());
-            existingGame.setImageUrl(game.getImageUrl());
-            existingGame.setPublishDate(game.getPublishDate());
+            existingGame.setName(gameTO.getName());
+            existingGame.setDescription(gameTO.getDescription());
+            existingGame.setImageUrl(gameTO.getImageUrl());
+            existingGame.setPublishDate(gameTO.getPublishDate());
             Game updatedGame = gameRepository.save(existingGame);
-            return ResponseEntity.ok(updatedGame);
+            GameTO updatedGameTO = gameConverter.convertToTO(updatedGame);
+            return ResponseEntity.ok(updatedGameTO);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -56,3 +70,4 @@ public class GameService {
         gameRepository.deleteById(id);
     }
 }
+

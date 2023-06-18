@@ -14,8 +14,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PurchaseTO implements Serializable {
 
-    private Long id;
-    private Long userId;
-    private Long gameId;
+    private GameNoPriceTO game;
     private LocalDate purchaseDate;
 }
