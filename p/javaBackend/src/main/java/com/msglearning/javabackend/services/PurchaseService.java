@@ -2,6 +2,7 @@ package com.msglearning.javabackend.services;
 
 import com.msglearning.javabackend.entity.Purchase;
 import com.msglearning.javabackend.repositories.PurchaseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,8 @@ import java.util.Optional;
 @Service
 public class PurchaseService {
 
-    private final PurchaseRepository purchaseRepository;
-
-    public PurchaseService(PurchaseRepository purchaseRepository) {
-        this.purchaseRepository = purchaseRepository;
-    }
+    @Autowired
+    PurchaseRepository purchaseRepository;
 
     // Gets purchases by user ID
     public List<Purchase> getPurchasesByUser(Long userId) {
@@ -48,6 +46,10 @@ public class PurchaseService {
 
     public void deletePurchase(Long id) {
         purchaseRepository.deleteById(id);
+    }
+
+    public List<Purchase> getAllPurchases() {
+        return purchaseRepository.findAll();
     }
 
 }

@@ -42,5 +42,17 @@ public class Game {
 
     @Column(name = "publish_date")
     private LocalDate publishDate;
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id=" + id +
+                ", publisher=" + publisher +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", publishDate=" + publishDate +
+                '}';
+    }
 }
 

@@ -2,7 +2,7 @@ package com.msglearning.javabackend.controllers;
 
 import com.msglearning.javabackend.entity.User;
 import com.msglearning.javabackend.services.PasswordService;
-import com.msglearning.javabackend.services.Tokenservice;
+import com.msglearning.javabackend.services.TokenService;
 import com.msglearning.javabackend.services.UserService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class AuthController {
     UserService userService;
 
     @Autowired
-    Tokenservice tokenService;
+    TokenService tokenService;
 
     @PostMapping(REGISTER_PATH)
     public boolean register(@RequestBody User user) {
@@ -49,7 +49,7 @@ public class AuthController {
 
             //No email and/or password
 
-            return "Forbidden";
+            return "No email or password";
         }
 
         Optional<User> userOpt = this.userService.findByEmail(email);
@@ -60,6 +60,6 @@ public class AuthController {
             return this.tokenService.createTokenHeader(userOpt.get().getEmail(), "USER"); // can be further extended to other roles
         }
 
-        return "Forbidden";
+        return "Nothing worked";
     }
 }

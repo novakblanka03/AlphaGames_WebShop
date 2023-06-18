@@ -41,4 +41,17 @@ public class User {
 
     @Column
     private boolean admin;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", gender='" + gender + '\'' +
+                ", admin=" + admin +
+                '}';
+    }
 }
