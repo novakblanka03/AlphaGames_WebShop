@@ -4,6 +4,7 @@ import com.msglearning.javabackend.entity.Purchase;
 import com.msglearning.javabackend.services.PurchaseService;
 import com.msglearning.javabackend.services.TokenService;
 import com.msglearning.javabackend.services.UserService;
+import com.msglearning.javabackend.to.PurchaseTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,12 +31,12 @@ public class PurchaseController {
     }
 
     @GetMapping("/all")
-    public List<Purchase> getAllPurchases(){
+    public List<PurchaseTO> getAllPurchases(){
        return purchaseService.getAllPurchases();
     }
 
     @GetMapping("/user/{userId}")
-    public List<Purchase> getPurchasesByUser(@PathVariable Long userId) {
+    public List<PurchaseTO> getPurchasesByUser(@PathVariable Long userId) {
         return purchaseService.getPurchasesByUser(userId);
     }
 

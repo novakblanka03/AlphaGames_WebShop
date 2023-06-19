@@ -7,6 +7,7 @@ import com.msglearning.javabackend.services.PurchaseService;
 import com.msglearning.javabackend.services.TokenService;
 import com.msglearning.javabackend.services.UserService;
 
+import com.msglearning.javabackend.to.PurchaseTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping(PURCHASE_PATH)
-    public List<Purchase> getUserPurchases(@RequestHeader("Authorization") String bearerToken){
+    public List<PurchaseTO> getUserPurchases(@RequestHeader("Authorization") String bearerToken){
         String userName = tokenService.resolveToken(bearerToken);
         Long userId = userService.findByEmail(userName).get().getId();
 

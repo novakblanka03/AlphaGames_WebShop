@@ -2,6 +2,7 @@ package com.msglearning.javabackend.controllers;
 
 import com.msglearning.javabackend.entity.Game;
 import com.msglearning.javabackend.services.GameService;
+import com.msglearning.javabackend.to.GameTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class GameController {
     }
 
     @GetMapping("/all")
-    public List<Game> getAllGames() {
+    public List<GameTO> getAllGames() {
         return gameService.getAllGames();
     }
 

@@ -1,13 +1,17 @@
 package com.msglearning.javabackend.services;
 
+import com.msglearning.javabackend.converters.GameConverter;
 import com.msglearning.javabackend.entity.Game;
 import com.msglearning.javabackend.repositories.GameRepository;
+import com.msglearning.javabackend.to.GameTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -18,8 +22,14 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-    public List<Game> getAllGames() {
-        return gameRepository.findAll();
+    public List<GameTO> getAllGames() {
+        List<Game> games = gameRepository.findAll();
+        if(games.isEmpty())
+            return Collections.emptyList();
+        else
+            return games.stream()
+                    .map(GameConverter::toGameTO)
+                    .collect(Collectors.toList());
     }
 
     public ResponseEntity<Game> getGameById(Long id) {

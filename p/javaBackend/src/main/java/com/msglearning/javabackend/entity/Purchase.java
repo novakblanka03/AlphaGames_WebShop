@@ -36,6 +36,7 @@ public class Purchase {
     @Column(name = "purchase_date")
     private LocalDate purchaseDate;
 
+
     @Override
     public String toString() {
         return "Purchase{" +
