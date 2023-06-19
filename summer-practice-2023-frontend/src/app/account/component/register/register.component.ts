@@ -14,10 +14,9 @@ export class RegisterComponent {
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     email: ['', Validators.required],
-    phone: ['', Validators.required],
-    username: ['', Validators.required],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-    occupation: ['', Validators.required],
+    password: ['', Validators.required],
+    genre: ['', Validators.required],
+    admin: ['', Validators.required]
   });
   loading = false;
   submitted = false;
