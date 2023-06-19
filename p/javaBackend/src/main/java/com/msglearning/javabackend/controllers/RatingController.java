@@ -2,6 +2,7 @@ package com.msglearning.javabackend.controllers;
 
 import com.msglearning.javabackend.entity.Rating;
 import com.msglearning.javabackend.services.RatingService;
+import com.msglearning.javabackend.to.RatingTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +25,16 @@ public class RatingController {
     }
 
     @GetMapping("/game/{gameId}/user/{userId}")
-    public ResponseEntity<Rating> getRatingForGameByUser(@PathVariable Long gameId, @PathVariable Long userId) {
+    public ResponseEntity<RatingTO> getRatingForGameByUser(@PathVariable Long gameId, @PathVariable Long userId) {
         Optional<Rating> rating = ratingService.getRatingForGameByUser(gameId, userId);
-        return rating.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        if (rating.isPresent()) {
+            RatingTO ratingTO = RatingTO.builder()
+                    .rating(rating.get().getRating())
+                    .build();
+            return ResponseEntity.ok(ratingTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping

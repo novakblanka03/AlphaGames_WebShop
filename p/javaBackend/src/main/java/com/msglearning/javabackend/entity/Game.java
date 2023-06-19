@@ -1,6 +1,7 @@
 package com.msglearning.javabackend.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,10 +38,16 @@ public class Game {
     @Column
     private String description;
 
+    @Column
+    private Double price;
+
     @Column(name = "image_url")
     private String imageUrl;
 
     @Column(name = "publish_date")
     private LocalDate publishDate;
+
+    @OneToMany(mappedBy = "game")
+    private List<GameGenre> gameGenres;
 }
 

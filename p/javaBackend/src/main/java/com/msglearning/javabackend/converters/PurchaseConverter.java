@@ -2,30 +2,44 @@ package com.msglearning.javabackend.converters;
 
 import com.msglearning.javabackend.entity.Game;
 import com.msglearning.javabackend.entity.Purchase;
-import com.msglearning.javabackend.entity.User;
+import com.msglearning.javabackend.to.GameNoPriceTO;
+import com.msglearning.javabackend.to.GameTO;
 import com.msglearning.javabackend.to.PurchaseTO;
-import com.msglearning.javabackend.to.UserTO;
+import lombok.Builder;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+@Builder
 public class PurchaseConverter {
-    public static UserTO toUserTO(User user) {
-        return UserTO.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .gender(user.getGender())
-                .admin(user.isAdmin())
+    private final GameConverter gameConverter;
+
+    public Purchase convertToEntity(PurchaseTO purchaseTO) {
+        Purchase purchase = new Purchase();
+        GameNoPriceTO gameTO = purchaseTO.getGame();
+        Game game = gameConverter.convertNoPriceTOToEntity(gameTO);
+        purchase.setGame(game);
+        purchase.setPurchaseDate(purchaseTO.getPurchaseDate());
+        return purchase;
+    }
+
+    public PurchaseTO convertToTO(Purchase purchase) {
+        Game game = purchase.getGame();
+        GameNoPriceTO gameNoPriceTO = gameConverter.convertToNoPriceTO(game);
+
+        return PurchaseTO.builder()
+                .game(gameNoPriceTO)
+                .purchaseDate(purchase.getPurchaseDate())
                 .build();
     }
 
-    public static User toUser(UserTO userTO) {
-        return User.builder()
-                .id(userTO.getId())
-                .firstName(userTO.getFirstName())
-                .lastName(userTO.getLastName())
-                .email(userTO.getEmail())
-                .gender(userTO.getGender())
-                .admin(userTO.isAdmin())
-                .build();
+    public List<PurchaseTO> convertToTOList(List<Purchase> purchases) {
+        return purchases.stream()
+                .map(this::convertToTO)
+                .collect(Collectors.toList());
     }
 }
+
+

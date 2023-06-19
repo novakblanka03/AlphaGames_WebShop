@@ -1,5 +1,7 @@
 package com.msglearning.javabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,5 +31,6 @@ public class Publisher {
     private String website;
 
     @OneToMany(mappedBy = "publisher")
+    @JsonIgnore
     private List<Game> games;
 }

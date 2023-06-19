@@ -1,5 +1,6 @@
 package com.msglearning.javabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class GameGenre {
 
     @ManyToOne
     @JoinColumn(name = "game_id")
+    @JsonIgnore
     private Game game;
 
     @ManyToOne
