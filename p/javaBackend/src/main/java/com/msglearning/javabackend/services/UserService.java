@@ -3,6 +3,7 @@ package com.msglearning.javabackend.services;
 import com.msglearning.javabackend.entity.User;
 import com.msglearning.javabackend.errors.ErrorResponse;
 import com.msglearning.javabackend.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,11 @@ import java.util.*;
 @Service
 public class UserService {
 
+    @Autowired
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
+
         this.userRepository = userRepository;
     }
 
@@ -26,8 +29,8 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers(){
+            return userRepository.findAll();
     }
 
     public ResponseEntity<?> createUser(User user) {

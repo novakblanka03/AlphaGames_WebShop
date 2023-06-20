@@ -1,7 +1,6 @@
 package com.msglearning.javabackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Data
 @Table(name = Purchase.TABLE_NAME)
@@ -34,9 +30,10 @@ public class Purchase {
 
     @ManyToOne
     @JoinColumn(name = "game_id")
-    @JsonInclude(JsonInclude.Include.NON_NULL) // Exclude the game ID from serialization
+    @JsonIgnore
     private Game game;
 
     @Column(name = "purchase_date")
     private LocalDate purchaseDate;
+
 }

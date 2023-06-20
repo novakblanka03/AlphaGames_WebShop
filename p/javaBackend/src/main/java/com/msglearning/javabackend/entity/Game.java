@@ -3,6 +3,7 @@ package com.msglearning.javabackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +30,6 @@ public class Game {
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")
-    @JsonIgnore
     private Publisher publisher;
 
     @Column

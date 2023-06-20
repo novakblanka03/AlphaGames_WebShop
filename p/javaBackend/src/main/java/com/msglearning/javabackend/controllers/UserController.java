@@ -1,8 +1,14 @@
 package com.msglearning.javabackend.controllers;
 
+import antlr.Token;
+import com.msglearning.javabackend.entity.Purchase;
 import com.msglearning.javabackend.entity.User;
+import com.msglearning.javabackend.services.PurchaseService;
+import com.msglearning.javabackend.services.TokenService;
 import com.msglearning.javabackend.services.UserService;
 
+import com.msglearning.javabackend.to.PurchaseTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +24,7 @@ public class UserController {
     private static final String EMAIL_PATH = "/email/{email}";
     private static final String NAME_PATH = "/name/{name}";
     private static final String PROFILE_IMAGE = "/image/{id}";
+    private static final String PURCHASE_PATH = "/purchases";
 
     private final UserService userService;
 
