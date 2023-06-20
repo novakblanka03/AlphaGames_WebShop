@@ -33,22 +33,26 @@ public class UserService {
             return userRepository.findAll();
     }
 
-//    public ResponseEntity<?> createUser(User user) {
-//        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-//        if (existingUser.isPresent()) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT)
-//                    .body(new ErrorResponse("User with the same email already exists."));
-//        }
-//
-//        User createdUser = userRepository.save(user);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-//    }
+    public ResponseEntity<?> createUser(User user) {
+        if (user.getEmail() == null || user.getPassword() == null || user.getFirstName() == null) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("Required fields are missing."));
+        }
 
-    public User createUser(User user) throws Exception{
-        //TO DO:
-        //Add validation and stuff
-        user.setPassword(PasswordService.getSaltedHash(user.getPassword()));
-        return userRepository.save(user);
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+        if (existingUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ErrorResponse("User with the same email already exists."));
+        }
+
+        try {
+            String hashedPassword = PasswordService.getSaltedHash(user.getPassword());
+            user.setPassword(hashedPassword);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("Error occurred during password hashing."));
+        }
+
+        User createdUser = userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     public void deleteUser(Long id) {

@@ -27,23 +27,19 @@ public class UserController {
     private static final String PROFILE_IMAGE = "/image/{id}";
     private static final String PURCHASE_PATH = "/purchases";
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    TokenService tokenService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-    @Autowired
-    PurchaseService purchaseService;
-
-
-    @GetMapping("/{id}")
+    @GetMapping(ID_PATH)
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/email/{email}")
+    @GetMapping(EMAIL_PATH)
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = userService.getUserByEmail(email);
         return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
@@ -54,21 +50,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping(PURCHASE_PATH)
-    public List<PurchaseTO> getUserPurchases(@RequestHeader("Authorization") String bearerToken){
-        String userName = tokenService.resolveToken(bearerToken);
-        Long userId = userService.findByEmail(userName).get().getId();
-
-        return purchaseService.getPurchasesByUser(userId);
-    }
-
-//    @PostMapping
-//    public ResponseEntity<ResponseEntity<?>> createUser(@RequestBody User user) {
-//        ResponseEntity<?> createdUser = userService.createUser(user);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-//    }
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ID_PATH)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }

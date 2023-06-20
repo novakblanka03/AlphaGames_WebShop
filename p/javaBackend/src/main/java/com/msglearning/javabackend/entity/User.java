@@ -42,20 +42,11 @@ public class User {
     @Column
     private boolean admin;
 
+    @OneToMany(mappedBy = "user")
+    private List<Purchase> userPurchases;
+
     public String getFullName(){
         return firstName + " " + lastName;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", gender='" + gender + '\'' +
-                ", admin=" + admin +
-                '}';
-    }
 }

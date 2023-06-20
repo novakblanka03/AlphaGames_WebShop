@@ -16,15 +16,7 @@ import java.util.List;
 public class PurchaseController {
     private static final String ID_PATH = "/{id}";
 
-//    private static final String PURCHASE_PATH = "/purchases";
-
     private final PurchaseService purchaseService;
-
-    @Autowired
-    TokenService tokenService;
-
-    @Autowired
-    UserService userService;
 
     public PurchaseController(PurchaseService purchaseService) {
         this.purchaseService = purchaseService;
@@ -39,14 +31,6 @@ public class PurchaseController {
     public List<PurchaseTO> getPurchasesByUser(@PathVariable Long userId) {
         return purchaseService.getPurchasesByUser(userId);
     }
-
-//    @GetMapping(PURCHASE_PATH)
-//    public List<Purchase> getUserPurchases(@RequestHeader("Authorization") String bearerToken){
-//        String userName = tokenService.resolveToken(bearerToken);
-//        Long userId = userService.findByEmail(userName).get().getId();
-//
-//        return purchaseService.getPurchasesByUser(userId);
-//    }
 
     @GetMapping(ID_PATH)
     public ResponseEntity<Purchase> getPurchaseById(@PathVariable Long id) {

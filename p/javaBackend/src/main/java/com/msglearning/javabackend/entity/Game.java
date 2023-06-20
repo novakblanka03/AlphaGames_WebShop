@@ -2,6 +2,7 @@ package com.msglearning.javabackend.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,6 @@ public class Game {
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")
-    @JsonIgnore
     private Publisher publisher;
 
     @Column
@@ -37,22 +37,16 @@ public class Game {
     @Column
     private String description;
 
+    @Column
+    private Double price;
+
     @Column(name = "image_url")
     private String imageUrl;
 
     @Column(name = "publish_date")
     private LocalDate publishDate;
 
-    @Override
-    public String toString() {
-        return "Game{" +
-                "id=" + id +
-                ", publisher=" + publisher +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", publishDate=" + publishDate +
-                '}';
-    }
+    @OneToMany(mappedBy = "game")
+    private List<GameGenre> gameGenres;
 }
 
