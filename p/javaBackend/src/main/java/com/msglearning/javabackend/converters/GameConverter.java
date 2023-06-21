@@ -2,9 +2,11 @@ package com.msglearning.javabackend.converters;
 
 import com.msglearning.javabackend.entity.Game;
 import com.msglearning.javabackend.entity.GameGenre;
+import com.msglearning.javabackend.entity.Genre;
 import com.msglearning.javabackend.to.GameTO;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,4 +41,5 @@ public class GameConverter {
     }
 
     //TODO: Discutie in legatura cu necesitatea noPriceTO;
+
 }

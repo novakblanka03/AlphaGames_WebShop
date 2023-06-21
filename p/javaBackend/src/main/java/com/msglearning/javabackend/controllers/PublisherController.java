@@ -30,9 +30,10 @@ public class PublisherController {
         return publisherService.getPublisherById(id);
     }
 
+    //ToDo: PublisherController PostMapping
     @PostMapping
-    public ResponseEntity<ErrorResponse> createPublisher(@RequestBody Publisher publisher) {
-        return (ResponseEntity<ErrorResponse>) publisherService.savePublisher(publisher);
+    public ResponseEntity<?> createPublisher(@RequestBody Publisher publisher) {
+        return publisherService.savePublisher(publisher);
     }
 
     @PutMapping(ID_PATH)

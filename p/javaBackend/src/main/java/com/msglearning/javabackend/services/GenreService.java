@@ -1,7 +1,6 @@
 package com.msglearning.javabackend.services;
 
 import com.msglearning.javabackend.entity.Genre;
-import com.msglearning.javabackend.entity.Publisher;
 import com.msglearning.javabackend.repositories.GenreRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

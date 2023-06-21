@@ -1,8 +1,10 @@
 package com.msglearning.javabackend.controllers;
 
 import com.msglearning.javabackend.entity.Game;
+import com.msglearning.javabackend.entity.GameGenre;
 import com.msglearning.javabackend.services.GameGenreService;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +16,12 @@ public class GameGenreController {
 
     public GameGenreController(GameGenreService gameGenreService) {
         this.gameGenreService = gameGenreService;
+    }
+
+    @PostMapping
+    public ResponseEntity<GameGenre> saveGameGenre(@RequestBody GameGenre gameGenre) {
+        GameGenre savedGameGenre = gameGenreService.saveGameGenre(gameGenre);
+        return ResponseEntity.ok(savedGameGenre);
     }
 
     @GetMapping("/genre/{genreId}/games")

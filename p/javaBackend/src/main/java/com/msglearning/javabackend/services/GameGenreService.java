@@ -21,4 +21,8 @@ public class GameGenreService {
         List<GameGenre> gameGenres = gameGenreRepository.findByGenreId(genreId, sort);
         return gameGenres.stream().map(GameGenre::getGame).collect(Collectors.toList());
     }
+
+    public GameGenre saveGameGenre(GameGenre gameGenre) {
+        return gameGenreRepository.save(gameGenre);
+    }
 }

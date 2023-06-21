@@ -21,26 +21,30 @@ public class PurchaseService {
     PurchaseRepository purchaseRepository;
 
     // Gets purchases by user ID
-    public List<PurchaseTO> getPurchasesByUser(Long userId) {
+    public ResponseEntity<List<PurchaseTO>> getPurchasesByUser(Long userId) {
         List<Purchase> purchases = purchaseRepository.findByUserId(userId);
-        if(purchases.isEmpty())
-            return Collections.emptyList();
-        else
-            return purchases.stream()
+        if (purchases.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        } else {
+            List<PurchaseTO> purchaseTOs = purchases.stream()
                     .map(PurchaseConverter::toPurchaseTO)
                     .collect(Collectors.toList());
+            return ResponseEntity.ok(purchaseTOs);
+        }
     }
 
-    public List<PurchaseTO> getAllPurchases() {
+    public ResponseEntity<List<PurchaseTO>> getAllPurchases() {
         List<Purchase> purchases = purchaseRepository.findAll();
-        if(purchases.isEmpty())
-            return Collections.emptyList();
-        else
-            return purchases.stream()
+        if (purchases.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        } else {
+            List<PurchaseTO> purchaseTOs = purchases.stream()
                     .map(PurchaseConverter::toPurchaseTO)
                     .collect(Collectors.toList());
-
+            return ResponseEntity.ok(purchaseTOs);
+        }
     }
+
     public ResponseEntity<Purchase> getPurchaseById(Long id) {
         Optional<Purchase> optionalPurchase = purchaseRepository.findById(id);
         return optionalPurchase.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());

@@ -2,17 +2,17 @@ package com.msglearning.javabackend.services;
 
 import com.msglearning.javabackend.converters.GameConverter;
 import com.msglearning.javabackend.entity.Game;
+import com.msglearning.javabackend.entity.GameGenre;
+import com.msglearning.javabackend.entity.Genre;
 import com.msglearning.javabackend.repositories.GameRepository;
+import com.msglearning.javabackend.repositories.GenreRepository;
 import com.msglearning.javabackend.to.GameTO;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -21,9 +21,12 @@ public class GameService {
 
     private final GameConverter gameConverter;
 
-    public GameService(GameRepository gameRepository, GameConverter gameConverter) {
+    private final GenreRepository genreRepository;
+
+    public GameService(GameRepository gameRepository, GameConverter gameConverter, GenreRepository genreRepository) {
         this.gameRepository = gameRepository;
         this.gameConverter = gameConverter;
+        this.genreRepository = genreRepository;
     }
 
     public List<GameTO> getAllGames() {
@@ -53,9 +56,25 @@ public class GameService {
 
     //TODO: saveGame should receive a Game object not GameTO
     public ResponseEntity<Game> saveGame(Game game) {
+        if (game.getGameGenres() != null && !game.getGameGenres().isEmpty()) {
+            // Create GameGenre entities for each genre ID
+            List<GameGenre> gameGenres = new ArrayList<>();
+            for (GameGenre gameGenre : game.getGameGenres()) {
+                Genre genre = genreRepository.findById(gameGenre.getGenre().getId())
+                        .orElseThrow(() -> new RuntimeException("Genre not found"));
+                gameGenre.setGame(game);
+                gameGenre.setGenre(genre);
+                gameGenres.add(gameGenre);
+            }
+            game.setGameGenres(gameGenres);
+        }
+
+        // Save the game with the associated GameGenre entities
         Game savedGame = gameRepository.save(game);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedGame);
+        return ResponseEntity.ok(savedGame);
     }
+
+
 
 //    Asa arata body-ul pt un updateGame:
 
@@ -80,6 +99,7 @@ public class GameService {
             existingGame.setImageUrl(game.getImageUrl());
             existingGame.setPublishDate(game.getPublishDate());
             existingGame.setPrice(game.getPrice());
+            existingGame.setGameGenres(game.getGameGenres());
             //Convert game to gameTO
             Game updatedGame = gameRepository.save(existingGame);
             GameTO updatedGameTO = gameConverter.toGameTO(updatedGame);
@@ -97,6 +117,4 @@ public class GameService {
     public void deleteGame(Long id) {
         gameRepository.deleteById(id);
     }
-
-
 }

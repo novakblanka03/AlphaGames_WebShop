@@ -23,12 +23,12 @@ public class PurchaseController {
     }
 
     @GetMapping("/all")
-    public List<PurchaseTO> getAllPurchases(){
-       return purchaseService.getAllPurchases();
+    public ResponseEntity<List<PurchaseTO>> getAllPurchases(){
+        return purchaseService.getAllPurchases();
     }
 
     @GetMapping("/user/{userId}")
-    public List<PurchaseTO> getPurchasesByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<PurchaseTO>> getPurchasesByUser(@PathVariable Long userId) {
         return purchaseService.getPurchasesByUser(userId);
     }
 
