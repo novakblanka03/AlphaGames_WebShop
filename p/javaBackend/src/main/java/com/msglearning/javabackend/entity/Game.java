@@ -43,8 +43,9 @@ public class Game {
     @Column(name = "publish_date")
     private LocalDate publishDate;
 
-    @OneToMany(mappedBy = "game")
-    private List<GameGenre> gameGenres;
+    @OneToMany(targetEntity = Genre.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "game_id", referencedColumnName = "id")
+    private List<Genre> genres;
 
 }
 

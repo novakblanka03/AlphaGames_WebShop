@@ -2,15 +2,15 @@ package com.msglearning.javabackend.services;
 
 import com.msglearning.javabackend.converters.GameConverter;
 import com.msglearning.javabackend.entity.Game;
-import com.msglearning.javabackend.entity.GameGenre;
 import com.msglearning.javabackend.entity.Genre;
+import com.msglearning.javabackend.entity.Purchase;
 import com.msglearning.javabackend.repositories.GameRepository;
 import com.msglearning.javabackend.repositories.GenreRepository;
+import com.msglearning.javabackend.repositories.PurchaseRepository;
 import com.msglearning.javabackend.to.GameTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,28 +22,33 @@ public class GameService {
     private final GameConverter gameConverter;
 
     private final GenreRepository genreRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final GenreService genreService;
 
-    public GameService(GameRepository gameRepository, GameConverter gameConverter, GenreRepository genreRepository) {
+    public GameService(GameRepository gameRepository, GameConverter gameConverter,
+                       GenreRepository genreRepository, PurchaseRepository purchaseRepository,
+                       GenreService genreService) {
         this.gameRepository = gameRepository;
         this.gameConverter = gameConverter;
         this.genreRepository = genreRepository;
+        this.purchaseRepository = purchaseRepository;
+        this.genreService = genreService;
     }
 
-    public List<GameTO> getAllGames() {
-        List<Game> games = gameRepository.findAll();
-        return gameConverter.convertToTOList(games);
+    public List<Game> getAllGames() {
+        return gameRepository.findAll();
     }
 
 //    public List<Game> getAllGamesRaw() {
 //        return gameRepository.findAll();
 //    }
 
-    public ResponseEntity<GameTO> getGameById(Long id) {
+    public ResponseEntity<Game> getGameById(Long id) {
         Optional<Game> optionalGame = gameRepository.findById(id);
         if (optionalGame.isPresent()) {
             Game game = optionalGame.get();
             GameTO gameTO = gameConverter.toGameTO(game);
-            return ResponseEntity.ok(gameTO);
+            return ResponseEntity.ok(game);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -56,22 +61,8 @@ public class GameService {
 
     //TODO: saveGame should receive a Game object not GameTO
     public ResponseEntity<Game> saveGame(Game game) {
-        if (game.getGameGenres() != null && !game.getGameGenres().isEmpty()) {
-            // Create GameGenre entities for each genre ID
-            List<GameGenre> gameGenres = new ArrayList<>();
-            for (GameGenre gameGenre : game.getGameGenres()) {
-                Genre genre = genreRepository.findById(gameGenre.getGenre().getId())
-                        .orElseThrow(() -> new RuntimeException("Genre not found"));
-                gameGenre.setGame(game);
-                gameGenre.setGenre(genre);
-                gameGenres.add(gameGenre);
-            }
-            game.setGameGenres(gameGenres);
-        }
-
-        // Save the game with the associated GameGenre entities
-        Game savedGame = gameRepository.save(game);
-        return ResponseEntity.ok(savedGame);
+        Game newGame = gameRepository.save(game);
+        return ResponseEntity.ok(newGame);
     }
 
 
@@ -89,32 +80,62 @@ public class GameService {
 //
 // }
 
-    public ResponseEntity<GameTO> updateGame(Long id, Game game) {
+    public ResponseEntity<Game> updateGame(Long id, Game newGame) {
         Optional<Game> optionalGame = gameRepository.findById(id);
         if (optionalGame.isPresent()) {
             Game existingGame = optionalGame.get();
             // Update game attributes
-            existingGame.setName(game.getName());
-            existingGame.setDescription(game.getDescription());
-            existingGame.setImageUrl(game.getImageUrl());
-            existingGame.setPublishDate(game.getPublishDate());
-            existingGame.setPrice(game.getPrice());
-            existingGame.setGameGenres(game.getGameGenres());
-            //Convert game to gameTO
+            existingGame.setName(newGame.getName());
+            existingGame.setDescription(newGame.getDescription());
+            existingGame.setImageUrl(newGame.getImageUrl());
+            existingGame.setPublishDate(newGame.getPublishDate());
+            existingGame.setPrice(newGame.getPrice());
+            System.out.println(existingGame.getGenres());
+
+            //Delete existing genres from existingGame;
+            List<Genre> genres = genreRepository.findByGameId(id);
+            for(Genre genre: genres){
+                System.out.println(genre.getId());
+                genreRepository.deleteById(genre.getId());
+            }
+
+            //Save genres in new game by incrementing id manually
+            //and update the existingGame;
+            Long highestId = genreRepository.getHighestId();
+            for(Genre genre: newGame.getGenres()){
+                genre.setId(++highestId);
+            }
+            existingGame.setGenres(newGame.getGenres());
+
+
+            //Save the newGame
             Game updatedGame = gameRepository.save(existingGame);
-            GameTO updatedGameTO = gameConverter.toGameTO(updatedGame);
-            return ResponseEntity.ok(updatedGameTO);
+            return ResponseEntity.ok(updatedGame);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-//    @Transactional
-//    public void updateGame(Long id, String name, String decription){
-//
-//    }
 
-    public void deleteGame(Long id) {
+    public void deleteGame(Long id) throws Exception{
+        //Check if game exists in table
+        if(!gameRepository.existsById(id))
+            throw new IllegalStateException("Game id does not exist");
+
+        //Delete genres for the game
+        Game game = gameRepository.getById(id);
+        List<Genre> genres = game.getGenres();
+        for(Genre genre: genres){
+            genreRepository.deleteById(genre.getId());
+        }
+
+        //Delete purchases which contain the game
+            List<Purchase> purchases = purchaseRepository.findByGameId(id);
+            for(Purchase purchase: purchases){
+                gameRepository.deleteById(purchase.getId());
+            }
+
+        //Delete the game
         gameRepository.deleteById(id);
     }
 }

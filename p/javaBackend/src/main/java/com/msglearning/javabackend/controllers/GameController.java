@@ -2,19 +2,12 @@ package com.msglearning.javabackend.controllers;
 
 import com.msglearning.javabackend.converters.GameConverter;
 import com.msglearning.javabackend.entity.Game;
-import com.msglearning.javabackend.entity.GameGenre;
-import com.msglearning.javabackend.entity.Genre;
-import com.msglearning.javabackend.repositories.GenreRepository;
 import com.msglearning.javabackend.services.GameService;
-import com.msglearning.javabackend.services.GenreService;
-import com.msglearning.javabackend.to.GameTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(ControllerConstants.API_PATH_GAME)
@@ -34,17 +27,12 @@ public class GameController {
     //TODO: Change all get requests to use some type of TO by need;
 
     @GetMapping("/all")
-    public List<GameTO> getAllGames() {
+    public List<Game> getAllGames() {
         return gameService.getAllGames();
     }
 
-//    @GetMapping("/all/raw")
-//    public List<Game> getAllGamesRaw() {
-//        return gameService.getAllGamesRaw();
-//    }
-
     @GetMapping(ID_PATH)
-    public ResponseEntity<GameTO> getGameById(@PathVariable Long id) {
+    public ResponseEntity<Game> getGameById(@PathVariable Long id) {
         return gameService.getGameById(id);
     }
 
@@ -55,18 +43,18 @@ public class GameController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        ResponseEntity<Game> savedGameResponse = gameService.saveGame(game);
+//        ResponseEntity<Game> savedGameResponse = gameService.saveGame(game);
 
-        // Create GameGenre connections
+/*        // Create GameGenre connections
         if (savedGameResponse.getStatusCode().is2xxSuccessful() && game.getGameGenres() != null) {
             Game savedGame = savedGameResponse.getBody();
             for (GameGenre gameGenre : game.getGameGenres()) {
                 gameGenre.setGame(savedGame);
                 gameGenreController.saveGameGenre(gameGenre);
             }
-        }
+        }*/
 
-        return savedGameResponse;
+        return gameService.saveGame(game);
     }
 
 //    JSON for Game Post:
@@ -101,7 +89,7 @@ public class GameController {
 
     //TODO: Discuss functionality of update methods
     @PutMapping(ID_PATH)
-    public ResponseEntity<GameTO> updateGame(@PathVariable Long id, @RequestBody Game game) {
+    public ResponseEntity<Game> updateGame(@PathVariable Long id, @RequestBody Game game) {
         return gameService.updateGame(id, game);
     }
 
@@ -116,7 +104,7 @@ public class GameController {
 //    }
 
     @DeleteMapping(ID_PATH)
-    public void deleteGame(@PathVariable Long id) {
+    public void deleteGame(@PathVariable Long id) throws Exception {
         gameService.deleteGame(id);
     }
 }

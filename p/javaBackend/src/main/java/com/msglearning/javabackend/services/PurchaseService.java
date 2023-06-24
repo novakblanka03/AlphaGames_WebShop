@@ -1,8 +1,11 @@
 package com.msglearning.javabackend.services;
 
 import com.msglearning.javabackend.converters.PurchaseConverter;
+import com.msglearning.javabackend.entity.Game;
 import com.msglearning.javabackend.entity.Purchase;
+import com.msglearning.javabackend.repositories.GameRepository;
 import com.msglearning.javabackend.repositories.PurchaseRepository;
+import com.msglearning.javabackend.repositories.UserRepository;
 import com.msglearning.javabackend.to.PurchaseTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +20,15 @@ import java.util.stream.Collectors;
 @Service
 public class PurchaseService {
 
-    @Autowired
-    PurchaseRepository purchaseRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final GameRepository gameRepository;
+    private final UserRepository userRepository;
+
+    public PurchaseService(PurchaseRepository purchaseRepository, GameRepository gameRepository, UserRepository userRepository) {
+        this.purchaseRepository = purchaseRepository;
+        this.gameRepository = gameRepository;
+        this.userRepository = userRepository;
+    }
 
     // Gets purchases by user ID
     public ResponseEntity<List<PurchaseTO>> getPurchasesByUser(Long userId) {
@@ -71,7 +81,4 @@ public class PurchaseService {
     public void deletePurchase(Long id) {
         purchaseRepository.deleteById(id);
     }
-
-
-
-}
+    }

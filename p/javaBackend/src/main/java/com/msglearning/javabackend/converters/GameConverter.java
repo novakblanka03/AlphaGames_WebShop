@@ -1,12 +1,10 @@
 package com.msglearning.javabackend.converters;
 
 import com.msglearning.javabackend.entity.Game;
-import com.msglearning.javabackend.entity.GameGenre;
 import com.msglearning.javabackend.entity.Genre;
 import com.msglearning.javabackend.to.GameTO;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +26,9 @@ public class GameConverter {
     }
 
     private List<String> getGenreNames(Game game){
-        List<GameGenre> gameGenres = game.getGameGenres();
-        return gameGenres.stream()
-                .map(gameGenre -> gameGenre.getGenre().getName())
+        List<Genre> genres = game.getGenres();
+        return genres.stream()
+                .map(Genre::getName)
                 .collect(Collectors.toList());
     }
 
