@@ -1,10 +1,14 @@
 package com.msglearning.javabackend.services;
 
-import com.msglearning.javabackend.converters.GameConverter;
 import com.msglearning.javabackend.entity.Game;
+import com.msglearning.javabackend.entity.GameGenre;
+import com.msglearning.javabackend.entity.Purchase;
+import com.msglearning.javabackend.entity.Rating;
+import com.msglearning.javabackend.repositories.GameGenreRepository;
 import com.msglearning.javabackend.repositories.GameRepository;
-import com.msglearning.javabackend.to.GameTO;
-import org.springframework.http.HttpStatus;
+import com.msglearning.javabackend.repositories.PurchaseRepository;
+import com.msglearning.javabackend.repositories.RatingRepository;
+import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,26 +19,17 @@ import java.util.Optional;
 public class GameService {
 
     private final GameRepository gameRepository;
-    private final GameConverter gameConverter;
-    private final PurchaseRepository purchaseRepository;
-    private final RatingRepository ratingRepository;
 
-    private final GenreRepository genreRepository;
+    private final RatingRepository ratingRepository;
     private final PurchaseRepository purchaseRepository;
-    private final GenreService genreService;
     private final GameGenreRepository gameGenreRepository;
 
-    public GameService(GameRepository gameRepository, GameConverter gameConverter,
-                       GenreRepository genreRepository, PurchaseRepository purchaseRepository,
-                       GenreService genreService, GameGenreRepository gameGenreRepository) {
+    public GameService(GameRepository gameRepository, RatingRepository ratingRepository,
+                       PurchaseRepository purchaseRepository, GameGenreRepository gameGenreRepository) {
         this.gameRepository = gameRepository;
-        this.gameConverter = gameConverter;
-        this.genreRepository = genreRepository;
-        this.purchaseRepository = purchaseRepository;
-        this.genreService = genreService;
-        this.gameGenreRepository = gameGenreRepository;
-        this.purchaseRepository = purchaseRepository;
         this.ratingRepository = ratingRepository;
+        this.purchaseRepository = purchaseRepository;
+        this.gameGenreRepository = gameGenreRepository;
     }
 
     public List<Game> getAllGames() {
@@ -83,26 +78,26 @@ public class GameService {
     }
 
 
-    public void deleteGame(Long id) throws Exception{
+    public void deleteGame(Long id) throws NotFoundException{
         //Check if game exists in table
         if(!gameRepository.existsById(id))
-            throw new IllegalStateException("Game id does not exist");
-        Game game = gameRepository.getById(id);
+            throw new NotFoundException("Game id does not exist");
 
         //Delete gameGenre connections which contain the game
         List<GameGenre> gameGenres = gameGenreRepository.findByGameId(id);
-        gameGenres.forEach(gameGenre -> {
-            gameGenreRepository.deleteById(gameGenre.getId());
-        });
+        gameGenres.forEach(gameGenre -> gameGenreRepository.deleteById(gameGenre.getId()));
 
         //Delete purchases which contain the game
             List<Purchase> purchases = purchaseRepository.findByGameId(id);
-            purchases.forEach(purchase -> {
-                purchaseRepository.deleteById(purchase.getId());
-            });
+            purchases.forEach(purchase -> purchaseRepository.deleteById(purchase.getId()));
+
+        // Delete all ratings related to the game
+        List<Rating> ratings = ratingRepository.findByGameId(id);
+        for (Rating rating : ratings) {
+            ratingRepository.deleteById(rating.getId());
+        }
 
         //Delete the game
         gameRepository.deleteById(id);
     }
 }
-
