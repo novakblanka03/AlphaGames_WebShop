@@ -1,10 +1,12 @@
 package com.msglearning.javabackend.controllers;
 
-import com.msglearning.javabackend.dto.GameGenreRequest;
+import com.msglearning.javabackend.to.GameGenreRequest;
 import com.msglearning.javabackend.entity.Game;
+import com.msglearning.javabackend.entity.GameGenre;
+import com.msglearning.javabackend.services.GameGenreService;
 import com.msglearning.javabackend.services.GameService;
 import com.msglearning.javabackend.services.GenreService;
-import org.springframework.data.domain.Sort;
+import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,32 +15,32 @@ import java.util.List;
 @RestController
 @RequestMapping(ControllerConstants.API_PATH_GAME_GENRE)
 public class GameGenreController {
-    private final GameService gameService;
-    private final GenreService genreService;
+    private final GameGenreService gameGenreService;
 
-    public GameGenreController(GameService gameService, GenreService genreService) {
-        this.gameService = gameService;
-        this.genreService = genreService;
-    }
-
-    @PostMapping
-    public ResponseEntity<Game> saveGameGenre(@RequestBody GameGenreRequest gameGenreRequest) {
-        return gameService.saveGame(gameGenreRequest.getGame());
+    public GameGenreController(GameGenreService gameGenreService) {
+        this.gameGenreService = gameGenreService;
     }
 
     @GetMapping("/all")
-    public List<Game> findAllGames(){
-        return gameService.getAllGames();
+    public List<GameGenre> findAllGameGenres(){
+        return gameGenreService.findAllGameGenres();
     }
-//    @GetMapping("/genre/{genreId}/games")
-//    public List<Game> getGamesByGenreIdSortedByTitle(@PathVariable Long genreId, @RequestParam(defaultValue = "title") String sortBy) {
-//        Sort sort = Sort.by(sortBy);
-//        return gameGenreService.getGamesByGenreIdSortedByTitle(genreId, sort);
-//    }
 
-    @PutMapping("/{{id}}")
-    public ResponseEntity<Game> updateGame(@PathVariable Long id, @RequestBody Game game){
-        return gameService.updateGame(id, game);
+    @PostMapping
+    public ResponseEntity<List<GameGenre>> saveGameGenre(@RequestBody GameGenreRequest gameGenreRequest) throws NotFoundException {
+        return ResponseEntity.ok(gameGenreService.createGameGenre(gameGenreRequest));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePurchase(@PathVariable Long id) {
+        gameGenreService.deleteGameGenre(id);
+        return ResponseEntity.ok("GameGenre with ID " + id + " has been deleted.");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateGameGenre(@PathVariable Long id, @RequestBody GameGenre gameGenre) throws NotFoundException {
+        gameGenreService.updateGameGenre(id, gameGenre);
+        return ResponseEntity.ok("GameGenre with ID " + id + " has been updated.");
     }
 
 }

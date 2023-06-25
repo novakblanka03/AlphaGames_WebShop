@@ -6,24 +6,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
-@Table(name = Genre.TABLE_NAME)
 @Entity
+@Table(name = GameGenre.TABLE_NAME)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Genre {
+public class GameGenre {
 
-    static final String TABLE_NAME = "genre";
+    static final String TABLE_NAME = "game_genre";
 
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
+
+    @ManyToOne
+    @JoinColumn(name = "genre_id")
+    private Genre genre;
 }

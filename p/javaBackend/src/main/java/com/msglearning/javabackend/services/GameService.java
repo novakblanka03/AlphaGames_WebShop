@@ -2,8 +2,10 @@ package com.msglearning.javabackend.services;
 
 import com.msglearning.javabackend.converters.GameConverter;
 import com.msglearning.javabackend.entity.Game;
+import com.msglearning.javabackend.entity.GameGenre;
 import com.msglearning.javabackend.entity.Genre;
 import com.msglearning.javabackend.entity.Purchase;
+import com.msglearning.javabackend.repositories.GameGenreRepository;
 import com.msglearning.javabackend.repositories.GameRepository;
 import com.msglearning.javabackend.repositories.GenreRepository;
 import com.msglearning.javabackend.repositories.PurchaseRepository;
@@ -24,15 +26,17 @@ public class GameService {
     private final GenreRepository genreRepository;
     private final PurchaseRepository purchaseRepository;
     private final GenreService genreService;
+    private final GameGenreRepository gameGenreRepository;
 
     public GameService(GameRepository gameRepository, GameConverter gameConverter,
                        GenreRepository genreRepository, PurchaseRepository purchaseRepository,
-                       GenreService genreService) {
+                       GenreService genreService, GameGenreRepository gameGenreRepository) {
         this.gameRepository = gameRepository;
         this.gameConverter = gameConverter;
         this.genreRepository = genreRepository;
         this.purchaseRepository = purchaseRepository;
         this.genreService = genreService;
+        this.gameGenreRepository = gameGenreRepository;
     }
 
     public List<Game> getAllGames() {
@@ -90,22 +94,6 @@ public class GameService {
             existingGame.setImageUrl(newGame.getImageUrl());
             existingGame.setPublishDate(newGame.getPublishDate());
             existingGame.setPrice(newGame.getPrice());
-            System.out.println(existingGame.getGenres());
-
-            //Delete existing genres from existingGame;
-            List<Genre> genres = genreRepository.findByGameId(id);
-            for(Genre genre: genres){
-                System.out.println(genre.getId());
-                genreRepository.deleteById(genre.getId());
-            }
-
-            //Save genres in new game by incrementing id manually
-            //and update the existingGame;
-            Long highestId = genreRepository.getHighestId();
-            for(Genre genre: newGame.getGenres()){
-                genre.setId(++highestId);
-            }
-            existingGame.setGenres(newGame.getGenres());
 
 
             //Save the newGame
@@ -121,19 +109,19 @@ public class GameService {
         //Check if game exists in table
         if(!gameRepository.existsById(id))
             throw new IllegalStateException("Game id does not exist");
-
-        //Delete genres for the game
         Game game = gameRepository.getById(id);
-        List<Genre> genres = game.getGenres();
-        for(Genre genre: genres){
-            genreRepository.deleteById(genre.getId());
-        }
+
+        //Delete gameGenre connections which contain the game
+        List<GameGenre> gameGenres = gameGenreRepository.findByGameId(id);
+        gameGenres.forEach(gameGenre -> {
+            gameGenreRepository.deleteById(gameGenre.getId());
+        });
 
         //Delete purchases which contain the game
             List<Purchase> purchases = purchaseRepository.findByGameId(id);
-            for(Purchase purchase: purchases){
-                gameRepository.deleteById(purchase.getId());
-            }
+            purchases.forEach(purchase -> {
+                purchaseRepository.deleteById(purchase.getId());
+            });
 
         //Delete the game
         gameRepository.deleteById(id);

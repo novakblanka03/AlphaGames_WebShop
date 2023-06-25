@@ -24,10 +24,6 @@ public class Game {
     @Column
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "publisher_id")
-    private Publisher publisher;
-
     @Column
     private String name;
 
@@ -42,10 +38,6 @@ public class Game {
 
     @Column(name = "publish_date")
     private LocalDate publishDate;
-
-    @OneToMany(targetEntity = Genre.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "game_id", referencedColumnName = "id")
-    private List<Genre> genres;
 
 }
 

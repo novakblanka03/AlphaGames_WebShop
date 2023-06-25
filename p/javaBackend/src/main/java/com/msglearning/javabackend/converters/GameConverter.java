@@ -20,17 +20,9 @@ public class GameConverter {
                 .price(game.getPrice())
                 .imageUrl(game.getImageUrl())
                 .publishDate(game.getPublishDate())
-                .genreNames(getGenreNames(game))
-                .publisherName(game.getPublisher().getName())
                 .build();
     }
 
-    private List<String> getGenreNames(Game game){
-        List<Genre> genres = game.getGenres();
-        return genres.stream()
-                .map(Genre::getName)
-                .collect(Collectors.toList());
-    }
 
     public List<GameTO> convertToTOList(List<Game> games) {
         return games.stream()

@@ -14,8 +14,6 @@ public interface GenreRepository extends JpaRepository<Genre, Long> {
     Long getHighestId();
 
 
-    List<Genre> findByGameId(Long gameId);
-
     boolean existsByName(String name);
 
 }
