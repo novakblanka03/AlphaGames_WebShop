@@ -1,6 +1,5 @@
 package com.msglearning.javabackend.controllers;
 
-import com.msglearning.javabackend.converters.GameConverter;
 import com.msglearning.javabackend.entity.Game;
 import com.msglearning.javabackend.services.GameService;
 import org.springframework.http.HttpStatus;
@@ -15,13 +14,9 @@ public class GameController {
     private static final String ID_PATH = "/{id}";
 
     private final GameService gameService;
-    private final GameConverter gameConverter;
-    private final GameGenreController gameGenreController;
 
-    public GameController(GameService gameService, GameConverter gameConverter, GameGenreController gameGenreController) {
+    public GameController(GameService gameService) {
         this.gameService = gameService;
-        this.gameConverter = gameConverter;
-        this.gameGenreController = gameGenreController;
     }
 
     @GetMapping("/all")

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Table(name = Game.TABLE_NAME)
@@ -29,6 +28,12 @@ public class Game {
 
     @Column
     private String description;
+
+    @Column
+    private String genres;
+
+    @Column(name = "publisher_name")
+    private String publisherName;
 
     @Column
     private Double price;

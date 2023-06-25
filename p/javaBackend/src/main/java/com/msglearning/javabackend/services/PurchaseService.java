@@ -1,6 +1,5 @@
 package com.msglearning.javabackend.services;
 
-import com.msglearning.javabackend.converters.PurchaseConverter;
 import com.msglearning.javabackend.entity.Game;
 import com.msglearning.javabackend.entity.Purchase;
 import com.msglearning.javabackend.entity.User;
@@ -8,16 +7,12 @@ import com.msglearning.javabackend.repositories.GameRepository;
 import com.msglearning.javabackend.repositories.PurchaseRepository;
 import com.msglearning.javabackend.repositories.UserRepository;
 import com.msglearning.javabackend.to.PurchaseRequest;
-import com.msglearning.javabackend.to.PurchaseTO;
 import javassist.NotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PurchaseService {
