@@ -3,7 +3,6 @@ package com.msglearning.javabackend.controllers;
 import com.msglearning.javabackend.entity.Purchase;
 import com.msglearning.javabackend.services.PurchaseService;
 import com.msglearning.javabackend.to.PurchaseRequest;
-import com.msglearning.javabackend.to.PurchaseTO;
 import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,7 @@ public class PurchaseController {
         this.purchaseService = purchaseService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Purchase>> findAllPurchases() {
         return ResponseEntity.ok(purchaseService.findAllPurchases());
     }
@@ -35,13 +34,13 @@ public class PurchaseController {
         return ResponseEntity.ok(purchaseService.createPurchase(request));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ID_PATH)
     public ResponseEntity<String> deletePurchase(@PathVariable Long id) {
         purchaseService.deletePurchase(id);
         return ResponseEntity.ok("Purchase with ID " + id + " has been deleted.");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(ID_PATH)
     public ResponseEntity<String> updatePurchase(@PathVariable Long id, @RequestBody Purchase purchase) throws NotFoundException {
         purchaseService.updatePurchase(id, purchase);
         return ResponseEntity.ok("Purchase with ID " + id + " has been updated.");

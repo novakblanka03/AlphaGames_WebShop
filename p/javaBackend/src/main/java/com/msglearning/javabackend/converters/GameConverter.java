@@ -1,7 +1,6 @@
 package com.msglearning.javabackend.converters;
 
 import com.msglearning.javabackend.entity.Game;
-import com.msglearning.javabackend.entity.Genre;
 import com.msglearning.javabackend.to.GameTO;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +10,6 @@ import java.util.stream.Collectors;
 @Component
 public class GameConverter {
 
-    //TODO: Decide on method names;
     public GameTO toGameTO(Game game){
         return GameTO.builder()
                 .id(game.getId())
@@ -29,7 +27,4 @@ public class GameConverter {
                 .map(this::toGameTO)
                 .collect(Collectors.toList());
     }
-
-    //TODO: Discutie in legatura cu necesitatea noPriceTO;
-
 }

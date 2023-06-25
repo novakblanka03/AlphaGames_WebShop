@@ -5,10 +5,8 @@ import com.msglearning.javabackend.services.PasswordService;
 import com.msglearning.javabackend.services.TokenService;
 import com.msglearning.javabackend.services.UserService;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
