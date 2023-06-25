@@ -41,4 +41,12 @@ public class User {
 
     @Column
     private boolean admin;
+
+    @OneToMany(mappedBy = "user")
+    private List<Purchase> userPurchases;
+
+    public String getFullName(){
+        return firstName + " " + lastName;
+    }
+
 }

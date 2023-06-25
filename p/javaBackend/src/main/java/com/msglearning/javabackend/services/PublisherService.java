@@ -29,8 +29,9 @@ public class PublisherService {
         return optionalPublisher.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    //ToDo: PublisherService savePublisher
     public ResponseEntity<?> savePublisher(Publisher publisher) {
-        if (StringUtils.isEmpty(publisher.getName()) || StringUtils.isEmpty(publisher.getWebsite())) {
+        if (!StringUtils.hasText(publisher.getName()) || !StringUtils.hasText(publisher.getWebsite())) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Name and website are required."));
         }
 

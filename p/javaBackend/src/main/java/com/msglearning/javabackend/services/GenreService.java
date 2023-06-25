@@ -1,7 +1,8 @@
 package com.msglearning.javabackend.services;
 
+import com.msglearning.javabackend.entity.GameGenre;
 import com.msglearning.javabackend.entity.Genre;
-import com.msglearning.javabackend.entity.Publisher;
+import com.msglearning.javabackend.repositories.GameGenreRepository;
 import com.msglearning.javabackend.repositories.GenreRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,11 @@ import java.util.Optional;
 public class GenreService {
 
     private final GenreRepository genreRepository;
+    private final GameGenreRepository gameGenreRepository;
 
-    public GenreService(GenreRepository genreRepository) {
+    public GenreService(GenreRepository genreRepository, GameGenreRepository gameGenreRepository) {
         this.genreRepository = genreRepository;
+        this.gameGenreRepository = gameGenreRepository;
     }
 
     public List<Genre> getAllGenres() {
@@ -55,6 +58,13 @@ public class GenreService {
     }
 
     public void deleteGenre(Long id) {
+
+        //Delete gameGenre connections which contain the game
+        List<GameGenre> gameGenres = gameGenreRepository.findByGenreId(id);
+        gameGenres.forEach(gameGenre -> {
+            gameGenreRepository.deleteById(gameGenre.getId());
+        });
+
         genreRepository.deleteById(id);
     }
 }

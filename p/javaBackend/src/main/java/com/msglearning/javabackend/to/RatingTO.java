@@ -10,5 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 public class RatingTO {
+
+    //TODO: Discuss parameters and usage of RatingTO
     private int rating;
+    private String userName;
+    private String gameName;
 }

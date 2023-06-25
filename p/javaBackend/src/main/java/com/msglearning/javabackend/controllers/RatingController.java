@@ -1,5 +1,6 @@
 package com.msglearning.javabackend.controllers;
 
+import com.msglearning.javabackend.converters.RatingConverter;
 import com.msglearning.javabackend.entity.Rating;
 import com.msglearning.javabackend.services.RatingService;
 import com.msglearning.javabackend.to.RatingTO;
@@ -16,8 +17,11 @@ public class RatingController {
 
     private final RatingService ratingService;
 
-    public RatingController(RatingService ratingService) {
+    private final RatingConverter ratingConverter;
+
+    public RatingController(RatingService ratingService, RatingConverter ratingConverter) {
         this.ratingService = ratingService;
+        this.ratingConverter = ratingConverter;
     }
 
     @GetMapping("/game/{gameId}/average")
@@ -29,9 +33,7 @@ public class RatingController {
     public ResponseEntity<RatingTO> getRatingForGameByUser(@PathVariable Long gameId, @PathVariable Long userId) {
         Optional<Rating> rating = ratingService.getRatingForGameByUser(gameId, userId);
         if (rating.isPresent()) {
-            RatingTO ratingTO = RatingTO.builder()
-                    .rating(rating.get().getRating())
-                    .build();
+            RatingTO ratingTO = ratingConverter.toRatingTO(rating.get());
             return ResponseEntity.ok(ratingTO);
         } else {
             return ResponseEntity.notFound().build();

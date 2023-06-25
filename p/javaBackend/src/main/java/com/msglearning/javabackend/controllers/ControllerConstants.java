@@ -13,4 +13,5 @@ public class ControllerConstants {
     public static final String API_PATH_GAME_GENRE = API_PATH + "/game_genre";
 
 
+    public static final String API_PATH_GAME_PUBLISHER = "/publisher";
 }

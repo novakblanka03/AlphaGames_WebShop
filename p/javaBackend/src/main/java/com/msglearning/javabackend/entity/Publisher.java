@@ -29,8 +29,4 @@ public class Publisher {
 
     @Column
     private String website;
-
-    @OneToMany(mappedBy = "publisher")
-    @JsonIgnore
-    private List<Game> games;
 }

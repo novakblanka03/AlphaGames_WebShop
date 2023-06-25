@@ -1,8 +1,13 @@
 package com.msglearning.javabackend.controllers;
 
+import com.msglearning.javabackend.to.GameGenreRequest;
 import com.msglearning.javabackend.entity.Game;
+import com.msglearning.javabackend.entity.GameGenre;
 import com.msglearning.javabackend.services.GameGenreService;
-import org.springframework.data.domain.Sort;
+import com.msglearning.javabackend.services.GameService;
+import com.msglearning.javabackend.services.GenreService;
+import javassist.NotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,9 +21,26 @@ public class GameGenreController {
         this.gameGenreService = gameGenreService;
     }
 
-    @GetMapping("/genre/{genreId}/games")
-    public List<Game> getGamesByGenreIdSortedByTitle(@PathVariable Long genreId, @RequestParam(defaultValue = "title") String sortBy) {
-        Sort sort = Sort.by(sortBy);
-        return gameGenreService.getGamesByGenreIdSortedByTitle(genreId, sort);
+    @GetMapping("/all")
+    public List<GameGenre> findAllGameGenres(){
+        return gameGenreService.findAllGameGenres();
     }
+
+    @PostMapping
+    public ResponseEntity<List<GameGenre>> saveGameGenre(@RequestBody GameGenreRequest gameGenreRequest) throws NotFoundException {
+        return ResponseEntity.ok(gameGenreService.createGameGenre(gameGenreRequest));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePurchase(@PathVariable Long id) {
+        gameGenreService.deleteGameGenre(id);
+        return ResponseEntity.ok("GameGenre with ID " + id + " has been deleted.");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateGameGenre(@PathVariable Long id, @RequestBody GameGenre gameGenre) throws NotFoundException {
+        gameGenreService.updateGameGenre(id, gameGenre);
+        return ResponseEntity.ok("GameGenre with ID " + id + " has been updated.");
+    }
+
 }

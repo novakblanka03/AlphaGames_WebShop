@@ -9,13 +9,13 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = GameGenre.TABLE_NAME)
+@Table(name = GamePublisher.TABLE_NAME)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GameGenre {
+public class GamePublisher {
 
-    static final String TABLE_NAME = "game_genre";
+    static final String TABLE_NAME = "game_publisher";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,6 @@ public class GameGenre {
     private Game game;
 
     @ManyToOne
-    @JoinColumn(name = "genre_id")
-    private Genre genre;
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
 }
