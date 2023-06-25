@@ -14,10 +14,8 @@ import java.util.Optional;
 @RequestMapping(ControllerConstants.API_PATH_USER)
 public class UserController {
 
-    private static final String ID_PATH = "/id/{id}";
+    private static final String ID_PATH = "/{id}";
     private static final String EMAIL_PATH = "/email/{email}";
-    private static final String NAME_PATH = "/name/{name}";
-    private static final String PROFILE_IMAGE = "/image/{id}";
 
     private final UserService userService;
 
@@ -40,6 +38,16 @@ public class UserController {
     @GetMapping("/all")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User newUser) {
+        Optional<User> updatedUser = userService.updateUser(id, newUser);
+        if (updatedUser.isPresent()) {
+            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping(ID_PATH)
