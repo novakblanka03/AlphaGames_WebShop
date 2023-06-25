@@ -1,8 +1,8 @@
 package com.msglearning.javabackend.controllers;
 
 import com.msglearning.javabackend.converters.GameConverter;
+import com.msglearning.javabackend.entity.Game;
 import com.msglearning.javabackend.services.GameService;
-import com.msglearning.javabackend.to.GameTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,37 +16,42 @@ public class GameController {
 
     private final GameService gameService;
     private final GameConverter gameConverter;
+    private final GameGenreController gameGenreController;
 
-    public GameController(GameService gameService, GameConverter gameConverter) {
+    public GameController(GameService gameService, GameConverter gameConverter, GameGenreController gameGenreController) {
         this.gameService = gameService;
         this.gameConverter = gameConverter;
+        this.gameGenreController = gameGenreController;
     }
 
     @GetMapping("/all")
-    public List<GameTO> getAllGames() {
+    public List<Game> getAllGames() {
         return gameService.getAllGames();
     }
 
     @GetMapping(ID_PATH)
-    public ResponseEntity<GameTO> getGameById(@PathVariable Long id) {
+    public ResponseEntity<Game> getGameById(@PathVariable Long id) {
         return gameService.getGameById(id);
     }
 
+
     @PostMapping
-    public ResponseEntity<GameTO> saveGame(@RequestBody GameTO gameTO) {
-        if (gameService.existsGameByName(gameTO.getName())) {
+    public ResponseEntity<Game> saveGame(@RequestBody Game game) {
+        if (gameService.existsGameByName(game.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        return gameService.saveGame(gameTO);
+
+
+        return gameService.saveGame(game);
     }
 
     @PutMapping(ID_PATH)
-    public ResponseEntity<GameTO> updateGame(@PathVariable Long id, @RequestBody GameTO gameTO) {
-        return gameService.updateGame(id, gameTO);
+    public ResponseEntity<Game> updateGame(@PathVariable Long id, @RequestBody Game game) {
+        return gameService.updateGame(id, game);
     }
 
     @DeleteMapping(ID_PATH)
-    public void deleteGame(@PathVariable Long id) {
+    public void deleteGame(@PathVariable Long id) throws Exception {
         gameService.deleteGame(id);
     }
 }

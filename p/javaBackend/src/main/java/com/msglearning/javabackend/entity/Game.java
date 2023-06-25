@@ -1,8 +1,6 @@
 package com.msglearning.javabackend.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -27,11 +24,6 @@ public class Game {
     @Column
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "publisher_id")
-    @JsonIgnore
-    private Publisher publisher;
-
     @Column
     private String name;
 
@@ -47,7 +39,5 @@ public class Game {
     @Column(name = "publish_date")
     private LocalDate publishDate;
 
-    @OneToMany(mappedBy = "game")
-    private List<GameGenre> gameGenres;
 }
 
