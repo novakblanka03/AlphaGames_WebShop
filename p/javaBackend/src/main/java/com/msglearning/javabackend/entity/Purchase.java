@@ -29,12 +29,10 @@ public class Purchase {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "game_id")
-    @JsonInclude(JsonInclude.Include.NON_NULL) // Exclude the game ID from serialization
     private Game game;
 
     @Column(name = "purchase_date")

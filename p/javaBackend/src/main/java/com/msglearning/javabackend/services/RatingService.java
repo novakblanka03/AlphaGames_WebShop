@@ -2,9 +2,13 @@ package com.msglearning.javabackend.services;
 
 import com.msglearning.javabackend.entity.Rating;
 import com.msglearning.javabackend.repositories.RatingRepository;
+import javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,17 +41,16 @@ public class RatingService {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedRating);
     }
 
-    public ResponseEntity<Rating> updateRating(Long id, Rating rating) {
-        Optional<Rating> optionalRating = ratingRepository.findById(id);
-        if (optionalRating.isPresent()) {
-            Rating existingRating = optionalRating.get();
-            // Update rating value
-            existingRating.setRating(rating.getRating());
-            Rating updatedRating = ratingRepository.save(existingRating);
-            return ResponseEntity.ok(updatedRating);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<Rating> updateRating(@PathVariable Long id, @RequestBody Rating updatedRating) throws NotFoundException {
+        Rating existingRating = ratingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Rating not found with ID: " + id));
+
+        existingRating.setRating(updatedRating.getRating());
+
+        Rating savedRating = ratingRepository.save(existingRating);
+
+        return new ResponseEntity<>(savedRating, HttpStatus.OK);
     }
 
     public void deleteRating(Long id) {

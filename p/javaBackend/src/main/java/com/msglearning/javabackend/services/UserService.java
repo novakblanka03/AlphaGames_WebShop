@@ -1,7 +1,11 @@
 package com.msglearning.javabackend.services;
 
+import com.msglearning.javabackend.entity.Purchase;
+import com.msglearning.javabackend.entity.Rating;
 import com.msglearning.javabackend.entity.User;
 import com.msglearning.javabackend.errors.ErrorResponse;
+import com.msglearning.javabackend.repositories.PurchaseRepository;
+import com.msglearning.javabackend.repositories.RatingRepository;
 import com.msglearning.javabackend.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +17,14 @@ import java.util.*;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PurchaseRepository purchaseRepository;
 
-    public UserService(UserRepository userRepository) {
+    private final RatingRepository ratingRepository;
+
+    public UserService(UserRepository userRepository, PurchaseRepository purchaseRepository, RatingRepository ratingRepository) {
         this.userRepository = userRepository;
+        this.purchaseRepository = purchaseRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     public Optional<User> getUserById(Long id) {
@@ -53,7 +62,36 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
+        // Retrieve all purchases related to the user
+        List<Purchase> purchases = purchaseRepository.findByUserId(id);
+        List<Rating> ratings = ratingRepository.findByUserId(id);
+
+
+        // Delete all purchases related to the user
+        for (Purchase purchase : purchases) {
+            purchaseRepository.deleteById(purchase.getId());
+        }
+
+        // Delete all ratings related to the user
+        for (Rating rating : ratings) {
+            ratingRepository.deleteById(rating.getId());
+        }
+
+        // Delete the user
         userRepository.deleteById(id);
+    }
+
+    public Optional<User> updateUser(Long id, User updatedUser) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    user.setFirstName(updatedUser.getFirstName());
+                    user.setLastName(updatedUser.getLastName());
+                    user.setEmail(updatedUser.getEmail());
+                    user.setPassword(updatedUser.getPassword());
+                    user.setGender(updatedUser.getGender());
+                    user.setAdmin(updatedUser.isAdmin());
+                    return userRepository.save(user);
+                });
     }
 
     public Optional<User> findByEmail(String email) {

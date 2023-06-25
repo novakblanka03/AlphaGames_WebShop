@@ -3,6 +3,7 @@ package com.msglearning.javabackend.controllers;
 import com.msglearning.javabackend.entity.Rating;
 import com.msglearning.javabackend.services.RatingService;
 import com.msglearning.javabackend.to.RatingTO;
+import javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class RatingController {
     }
 
     @PutMapping(ID_PATH)
-    public ResponseEntity<Rating> updateRating(@PathVariable Long id, @RequestBody Rating rating) {
+    public ResponseEntity<Rating> updateRating(@PathVariable Long id, @RequestBody Rating rating) throws NotFoundException {
         return ratingService.updateRating(id, rating);
     }
 

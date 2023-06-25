@@ -2,7 +2,11 @@ package com.msglearning.javabackend.services;
 
 import com.msglearning.javabackend.converters.GameConverter;
 import com.msglearning.javabackend.entity.Game;
+import com.msglearning.javabackend.entity.Purchase;
+import com.msglearning.javabackend.entity.Rating;
 import com.msglearning.javabackend.repositories.GameRepository;
+import com.msglearning.javabackend.repositories.PurchaseRepository;
+import com.msglearning.javabackend.repositories.RatingRepository;
 import com.msglearning.javabackend.to.GameTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +20,14 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final GameConverter gameConverter;
+    private final PurchaseRepository purchaseRepository;
+    private final RatingRepository ratingRepository;
 
-    public GameService(GameRepository gameRepository, GameConverter gameConverter) {
+    public GameService(GameRepository gameRepository, GameConverter gameConverter, PurchaseRepository purchaseRepository, RatingRepository ratingRepository) {
         this.gameRepository = gameRepository;
         this.gameConverter = gameConverter;
+        this.purchaseRepository = purchaseRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     public List<GameTO> getAllGames() {
@@ -67,6 +75,19 @@ public class GameService {
     }
 
     public void deleteGame(Long id) {
+        List<Purchase> purchases = purchaseRepository.findByGameId(id);
+        List<Rating> ratings = ratingRepository.findByGameId(id);
+
+        // Delete all purchases related to the game
+        for (Purchase purchase : purchases) {
+            purchaseRepository.deleteById(purchase.getId());
+        }
+
+        // Delete all ratings related to the user
+        for (Rating rating : ratings) {
+            ratingRepository.deleteById(rating.getId());
+        }
+
         gameRepository.deleteById(id);
     }
 }
