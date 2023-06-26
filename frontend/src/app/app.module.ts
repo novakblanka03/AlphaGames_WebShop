@@ -14,6 +14,8 @@ import { StoreComponent } from './store/store.component';
 import { GameDetailsComponent } from './game-details/game-details.component';
 import { GameService } from './game/game.service';
 import { AccountService } from './account/component/services/account.service';
+import {NgOptimizedImage} from "@angular/common";
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 
 
 
@@ -28,14 +30,16 @@ import { AccountService } from './account/component/services/account.service';
     LibraryComponent,
     StoreComponent,
     GameDetailsComponent,
+    ShoppingCartComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        FormsModule,
+        HttpClientModule,
+        NgOptimizedImage,
+    ],
   providers: [GameService, AccountService],
   bootstrap: [AppComponent],
 })
