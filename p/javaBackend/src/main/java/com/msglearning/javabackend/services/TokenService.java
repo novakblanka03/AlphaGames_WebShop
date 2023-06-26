@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-    private Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass().getName());
 
     private static final String ROLE = "role";
     private static final String NAME = "name";
@@ -34,7 +34,7 @@ public class TokenService {
      * @return the generated token
      */
     public String createTokenHeader(final String email, final String role){
-        String token = this.createJWT(ID, email, role, 21600000L);
+        String token = this.createJWT(email, role);
         return TOKEN_PREFIX + token + TOKEN_SUFFIX;
     }
 
@@ -43,7 +43,7 @@ public class TokenService {
      *
      * @return the generated token
      */
-    private String createJWT(String id, String name, String role, long ttlMillis) {
+    private String createJWT(String name, String role) {
 
         // The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -51,14 +51,12 @@ public class TokenService {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
 
-        JwtBuilder builder = Jwts.builder().setId(id).setIssuedAt(now).claim(NAME, name).claim(ROLE, role)
+        JwtBuilder builder = Jwts.builder().setId(TokenService.ID).setIssuedAt(now).claim(NAME, name).claim(ROLE, role)
                 .signWith(signatureAlgorithm, base64SecretBytes);
 
-        if (ttlMillis >= 0) {
-            long expMillis = nowMillis + ttlMillis;
-            Date exp = new Date(expMillis);
-            builder.setExpiration(exp);
-        }
+        long expMillis = nowMillis + (long) 21600000;
+        Date exp = new Date(expMillis);
+        builder.setExpiration(exp);
 
         return builder.compact();
     }
@@ -81,11 +79,11 @@ public class TokenService {
         }
     }
 
-    /**
-     * Retrieves the name of the user from the token.
-     * @param token
-     * @return the nam of the user
-     */
+//    /**
+//     * Retrieves the name of the user from the token.
+//     * @param token
+//     * @return the nam of the user
+//     */
     public  String getUserName(String token){
         Jws<Claims> claims = Jwts.parser().setSigningKey(base64SecretBytes).parseClaimsJws(token);
         Claims claimsBody = claims.getBody();
@@ -95,10 +93,10 @@ public class TokenService {
     private void logClaims(Claims claimsBody, StringBuilder toLog) {
         String separator = System.getProperty("line.separator");
         toLog.append(separator);
-        toLog.append("ID: " + claimsBody.getId() + separator);
-        toLog.append("Name: " + claimsBody.get(NAME) + separator);
-        toLog.append("Role: " + claimsBody.get(ROLE) + separator);
-        toLog.append("Expiration: " + claimsBody.getExpiration() + separator);
+        toLog.append("ID: ").append(claimsBody.getId()).append(separator);
+        toLog.append("Name: ").append(claimsBody.get(NAME)).append(separator);
+        toLog.append("Role: ").append(claimsBody.get(ROLE)).append(separator);
+        toLog.append("Expiration: ").append(claimsBody.getExpiration()).append(separator);
         LOG.debug(toLog.toString());
     }
 

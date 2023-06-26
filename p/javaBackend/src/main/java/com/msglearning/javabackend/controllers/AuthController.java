@@ -18,6 +18,7 @@ public class AuthController {
 
     private static final String REGISTER_PATH = "/register";
     private static final String LOGIN_PATH = "/login";
+
     public static final String AUTHORIZATION = "authorization";
 
     private final UserService userService;

@@ -2,8 +2,6 @@ package com.msglearning.javabackend.controllers;
 
 import com.msglearning.javabackend.entity.User;
 import com.msglearning.javabackend.services.UserService;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +27,7 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    //TODO
     @GetMapping(EMAIL_PATH)
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = userService.getUserByEmail(email);
@@ -41,17 +40,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User newUser) {
-        Optional<User> updatedUser = userService.updateUser(id, newUser);
-        if (updatedUser.isPresent()) {
-            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User newUser) {
+        return userService.updateUser(id, newUser);
     }
 
     @DeleteMapping(ID_PATH)
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        String response = userService.deleteUser(id);
+        return ResponseEntity.ok(response);
     }
 }

@@ -29,7 +29,6 @@ public class GameController {
         return gameService.getGameById(id);
     }
 
-
     @PostMapping
     public ResponseEntity<Game> saveGame(@RequestBody Game game) {
         if (gameService.existsGameByName(game.getName())) {
@@ -41,12 +40,13 @@ public class GameController {
     }
 
     @PutMapping(ID_PATH)
-    public ResponseEntity<Game> updateGame(@PathVariable Long id, @RequestBody Game game) {
-        return gameService.updateGame(id, game);
+    public ResponseEntity<Game> updateGame(@PathVariable Long id, @RequestBody Game newGame) {
+        return gameService.updateGame(id, newGame);
     }
 
     @DeleteMapping(ID_PATH)
-    public void deleteGame(@PathVariable Long id) throws Exception {
-        gameService.deleteGame(id);
+    public ResponseEntity<String> deleteGame(@PathVariable Long id) throws Exception {
+        String response = gameService.deleteGame(id);
+        return ResponseEntity.ok(response);
     }
 }
