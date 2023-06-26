@@ -34,6 +34,7 @@
               <li><a (click)="goToPage('store')">Store</a></li>
               <li><a (click)="goToPage('new')">New Games</a></li>
               <li><a (click)="goToPage('cart')">Shopping Cart</a></li>
+              <li *ngIf="this.accountService.isLoggedIn()"><a (click)="goToPage('library')">Library</a></li>
               <li *ngIf="this.accountService.isLoggedIn()"><a (click)="logout()">Log Out</a></li>
           </div>
       </div>

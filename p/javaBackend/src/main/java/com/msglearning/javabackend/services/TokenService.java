@@ -26,15 +26,15 @@ public class TokenService {
     private static final String TOKEN_SUFFIX = "\"}";
 
     /**
-     * Creates a token from the given email and role.
-     * @param email
-     * 		- the email of the user
-     * @param role
-     * 		- the role of the user
+     * Creates a token from the given email, role, and user ID.
+     *
+     * @param email  - the email of the user
+     * @param role   - the role of the user
+     * @param userId - the ID of the user
      * @return the generated token
      */
-    public String createTokenHeader(final String email, final String role){
-        String token = this.createJWT(email, role);
+    public String createTokenHeader(final String email, final String role, final String userId) {
+        String token = this.createJWT(email, role, userId);
         return TOKEN_PREFIX + token + TOKEN_SUFFIX;
     }
 
@@ -43,15 +43,14 @@ public class TokenService {
      *
      * @return the generated token
      */
-    private String createJWT(String name, String role) {
-
+    private String createJWT(String name, String role, String userId) {
         // The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
 
-        JwtBuilder builder = Jwts.builder().setId(TokenService.ID).setIssuedAt(now).claim(NAME, name).claim(ROLE, role)
+        JwtBuilder builder = Jwts.builder().setId(userId).setIssuedAt(now).claim(NAME, name).claim(ROLE, role)
                 .signWith(signatureAlgorithm, base64SecretBytes);
 
         long expMillis = nowMillis + (long) 21600000;
@@ -63,6 +62,7 @@ public class TokenService {
 
     /**
      * Checks if the given token is valid or not.
+     *
      * @param token the token to check
      * @return true if the token is valid, false otherwise
      */
@@ -73,18 +73,19 @@ public class TokenService {
             StringBuilder toLog = new StringBuilder();
             logClaims(claimsBody, toLog);
             return !claims.getBody().getExpiration().before(new Date());
-        }catch (JwtException e){
-            LOG.error("Access denied: " + e.getMessage() , e);
+        } catch (JwtException e) {
+            LOG.error("Access denied: " + e.getMessage(), e);
             return false;
         }
     }
 
-//    /**
-//     * Retrieves the name of the user from the token.
-//     * @param token
-//     * @return the nam of the user
-//     */
-    public  String getUserName(String token){
+    /**
+     * Retrieves the name of the user from the token.
+     *
+     * @param token
+     * @return the name of the user
+     */
+    public String getUserName(String token) {
         Jws<Claims> claims = Jwts.parser().setSigningKey(base64SecretBytes).parseClaimsJws(token);
         Claims claimsBody = claims.getBody();
         return claimsBody.get(NAME).toString();
@@ -107,5 +108,5 @@ public class TokenService {
         }
         return null;
     }
-
 }
+
