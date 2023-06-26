@@ -73,10 +73,12 @@ public class PurchaseService {
                 .orElseThrow(() -> new NotFoundException("Purchase not found with ID: " + id));
 
         // Update the fields of the existing purchase with the new data from the request payload
-        existingPurchase.setUser(purchase.getUser());
-        existingPurchase.setGame(purchase.getGame());
-        existingPurchase.setPurchaseDate(purchase.getPurchaseDate());
-        // Update other fields as needed
+        if (purchase.getUser() != null)
+            existingPurchase.setUser(purchase.getUser());
+        if (purchase.getGame() != null)
+            existingPurchase.setGame(purchase.getGame());
+        if (purchase.getPurchaseDate() != null)
+            existingPurchase.setPurchaseDate(purchase.getPurchaseDate());
 
         purchaseRepository.save(existingPurchase);
     }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Service
@@ -61,11 +62,14 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    public void deleteUser(Long id) {
+    public String deleteUser(Long id) {
+        // Check if the user exists
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
         // Retrieve all purchases related to the user
         List<Purchase> purchases = purchaseRepository.findByUserId(id);
         List<Rating> ratings = ratingRepository.findByUserId(id);
-
 
         // Delete all purchases related to the user
         for (Purchase purchase : purchases) {
@@ -79,21 +83,47 @@ public class UserService {
 
         // Delete the user
         userRepository.deleteById(id);
+
+        // Return success message
+        return "User deleted successfully.";
     }
 
-    public Optional<User> updateUser(Long id, User updatedUser) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    user.setFirstName(updatedUser.getFirstName());
-                    user.setLastName(updatedUser.getLastName());
-                    user.setEmail(updatedUser.getEmail());
-                    user.setPassword(updatedUser.getPassword());
-                    user.setGender(updatedUser.getGender());
-                    user.setAdmin(updatedUser.isAdmin());
-                    return userRepository.save(user);
-                });
+    public ResponseEntity<User> updateUser(Long id, User updatedUser) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+
+            if(updatedUser.getFirstName() != null)
+                existingUser.setFirstName(updatedUser.getFirstName());
+            if(updatedUser.getLastName() != null)
+                existingUser.setLastName(updatedUser.getLastName());
+            if(updatedUser.getEmail() != null)
+                existingUser.setEmail(updatedUser.getEmail());
+
+            // Checking if updatedUserPassword is not null and different from userPassword
+            if (updatedUser.getPassword() != null && !existingUser.getPassword().equals(updatedUser.getPassword())) {
+                try {
+                    String hashedPassword = PasswordService.getSaltedHash(updatedUser.getPassword());
+                    existingUser.setPassword(hashedPassword);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error occurred during password hashing.", e);
+                }
+            }
+
+            if(updatedUser.getGender() != null)
+                existingUser.setGender(updatedUser.getGender());
+            if(updatedUser.isAdmin() != existingUser.isAdmin())
+                existingUser.setAdmin(updatedUser.isAdmin());
+
+            User savedUser = userRepository.save(existingUser);
+            return ResponseEntity.ok(savedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
+
+    //TODO
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }

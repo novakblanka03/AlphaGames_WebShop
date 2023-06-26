@@ -54,15 +54,22 @@ public class GameService {
         Optional<Game> optionalGame = gameRepository.findById(id);
         if (optionalGame.isPresent()) {
             Game existingGame = optionalGame.get();
-            // Update game attributes
-            existingGame.setName(newGame.getName());
-            existingGame.setDescription(newGame.getDescription());
-            existingGame.setImageUrl(newGame.getImageUrl());
-            existingGame.setPublishDate(newGame.getPublishDate());
-            existingGame.setPrice(newGame.getPrice());
-            existingGame.setGenres(newGame.getGenres());
-            existingGame.setPublisherName(newGame.getPublisherName());
 
+            // Update game attributes if new values are not null
+            if(newGame.getName() != null)
+                existingGame.setName(newGame.getName());
+            if(newGame.getDescription() != null)
+                existingGame.setDescription(newGame.getDescription());
+            if(newGame.getImageUrl() != null)
+                existingGame.setImageUrl(newGame.getImageUrl());
+            if(newGame.getPublishDate() != null)
+                existingGame.setPublishDate(newGame.getPublishDate());
+            if(newGame.getPrice() != null)
+                existingGame.setPrice(newGame.getPrice());
+            if(newGame.getGenres() != null)
+                existingGame.setGenres(newGame.getGenres());
+            if(newGame.getPublisherName() != null)
+                existingGame.setPublisherName(newGame.getPublisherName());
 
             //Save the newGame
             Game updatedGame = gameRepository.save(existingGame);
@@ -72,7 +79,7 @@ public class GameService {
         }
     }
 
-    public void deleteGame(Long id) throws NotFoundException{
+    public String deleteGame(Long id) throws NotFoundException{
         //Check if game exists in table
         if(!gameRepository.existsById(id))
             throw new NotFoundException("Game id does not exist");
@@ -89,5 +96,8 @@ public class GameService {
 
         //Delete the game
         gameRepository.deleteById(id);
+
+        // Return success message
+        return "Game deleted successfully.";
     }
 }

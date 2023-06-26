@@ -41,7 +41,7 @@ public class RatingController {
     }
 
     @PostMapping
-    public ResponseEntity<Rating> saveRating(@RequestBody Rating rating) {
+    public ResponseEntity<RatingTO> saveRating(@RequestBody Rating rating) throws NotFoundException {
         return ratingService.saveRating(rating);
     }
 

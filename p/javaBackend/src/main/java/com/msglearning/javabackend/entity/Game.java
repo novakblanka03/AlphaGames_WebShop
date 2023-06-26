@@ -23,7 +23,7 @@ public class Game {
     @Column
     private Long id;
 
-    @Column
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Column
@@ -43,6 +43,5 @@ public class Game {
 
     @Column(name = "publish_date")
     private LocalDate publishDate;
-
 }
 
