@@ -1,5 +1,4 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -10,6 +9,13 @@ import { NgModule } from '@angular/core';
 import { RegisterComponent } from './account/component/register/register.component';
 import { StuffListComponent } from './users/components/stuff-list/stuff-list.component';
 import { UserListComponent } from './users/components/user-list/user-list.component';
+import { LibraryComponent } from './library/library.component';
+import { StoreComponent } from './store/store.component';
+import { GameDetailsComponent } from './game-details/game-details.component';
+import { GameService } from './game/game.service';
+import { AccountService } from './account/component/services/account.service';
+
+
 
 @NgModule({
   declarations: [
@@ -19,6 +25,9 @@ import { UserListComponent } from './users/components/user-list/user-list.compon
     HomeComponent,
     RegisterComponent,
     StuffListComponent,
+    LibraryComponent,
+    StoreComponent,
+    GameDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,7 +36,7 @@ import { UserListComponent } from './users/components/user-list/user-list.compon
     FormsModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [GameService, AccountService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
