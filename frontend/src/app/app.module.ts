@@ -16,8 +16,10 @@ import { GameService } from './game/game.service';
 import { AccountService } from './account/component/services/account.service';
 import {NgOptimizedImage} from "@angular/common";
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
-
-
+// import function to register Swiper custom elements
+import { register } from 'swiper/element/bundle';
+// register Swiper custom elements
+register();
 
 @NgModule({
   declarations: [

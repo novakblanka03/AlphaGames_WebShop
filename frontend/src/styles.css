@@ -31,4 +31,8 @@ img{
 body{
     color: var(--text-color);
     background: var(--dark-color); 
+/* DISPLAY Block for Default Scroll Bar */
+}
+html::-webkit-scrollbar{
+  display:none;
 }

@@ -3,6 +3,8 @@ import { Component, inject } from '@angular/core';
 import { AccountService } from './account/component/services/account.service';
 import { Router } from '@angular/router';
 
+import { HostListener } from '@angular/core';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,6 +15,18 @@ export class AppComponent {
 
   accountService = inject(AccountService);
   router = inject(Router)
+
+  //Custom Scroll Bar
+  @HostListener("window:scroll") onWindowScroll() {
+    const scrollBar = document.getElementById('scroll-bar');
+
+    var winScroll: number = document.body.scrollTop || document.documentElement.scrollTop;
+    var height: number = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var scrolled: number = (winScroll / height) * 100;
+    if (scrollBar !== null) {
+      scrollBar.style.width = scrolled + '%';
+    }
+  };
 
   logout() {
     this.accountService.logout();

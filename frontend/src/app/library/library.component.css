@@ -35,3 +35,8 @@
   object-fit: cover;
   cursor: pointer;
 }
+
+.card{
+  color: var(--text-color);
+  background: var(--dark-color); 
+}

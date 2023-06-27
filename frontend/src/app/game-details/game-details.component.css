@@ -18,4 +18,9 @@
   .loading-container {
     margin-top: 20px; /* Add a margin between the loading message and other content */
   }
+
+  .card{
+    color: var(--text-color);
+    background: var(--dark-color); 
+}
   
