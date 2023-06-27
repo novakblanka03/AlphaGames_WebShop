@@ -19,7 +19,10 @@
           <!--Nav Icons -->
           <div class="nav-icons">
               <i *ngIf="this.accountService.isLoggedIn()" class='bx bx-bell bx-tada' id="bell-icon"><span></span></i>
+              <button *ngIf="!this.accountService.isLoggedIn()" class="btn signInButton" (click)=redirectToRegister() > Sign up </button>
+              <button *ngIf="!this.accountService.isLoggedIn()" class="btn signInButton logInButton" (click)=redirectToLogin()> Log in </button>
           </div>
+
           <div class="menu-icon" (click)="toggleMenu()">
               <div class="line1"></div>
               <div class="line2"></div>

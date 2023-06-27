@@ -86,12 +86,14 @@ a {
 }
 
 #success {
+    color: #F35F40;
+    background-color: rgba(255, 114, 114, 0.11);
     display: none;
 }
 
 #passwordAlert {
     display: none;
-    color: red;
+    color: #f85252;
 }
 
 .custom-btn {
