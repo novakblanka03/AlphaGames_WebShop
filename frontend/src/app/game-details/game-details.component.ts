@@ -10,7 +10,7 @@ import { GameService } from '../game/game.service';
 })
 export class GameDetailsComponent implements OnInit {
   game: Game | undefined;
-  isStoreComponent = false;
+  isStoreComponent = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,28 +26,15 @@ export class GameDetailsComponent implements OnInit {
     const gameId = +this.route.snapshot.params['id']; // Use the '+' operator to convert the ID to a number
   
     console.log('Game ID:', gameId); // Print the game ID to the console
-  
-    if (this.isStoreComponent) {
-      // Request for the store component
-      this.gameService.getGameById(gameId).subscribe({
-        next: (game: Game) => {
-          this.game = game;
-        },
-        error: (error) => {
-          console.error(error);
-        }
-      });
-    } else {
-      // Request for the library component
-      this.gameService.getPurchasedGameById(gameId).subscribe({
-        next: (game: Game) => {
-          this.game = game;
-        },
-        error: (error) => {
-          console.error(error);
-        }
-      });
-    }
+    // Request for the store component
+    this.gameService.getGameById(gameId).subscribe({
+      next: (game: Game) => {
+        this.game = game;
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
   }
   
 }
