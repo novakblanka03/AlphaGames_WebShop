@@ -16,6 +16,7 @@ export class AppComponent {
 
   logout() {
     this.accountService.logout();
+    localStorage.removeItem('cartGameIds');
     this.goToPage("login");
   }
 

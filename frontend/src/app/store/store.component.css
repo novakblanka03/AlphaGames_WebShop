@@ -50,7 +50,7 @@
   margin-top: 10px;
 }
 
-.add-to-cart-button {
+.add-to-cart-button, .delete-game-button{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,6 +61,17 @@
 }
 
 .add-to-cart-button img {
-  width: 20px; /* Adjust the size as needed */
-  height: 20px; /* Adjust the size as needed */
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.delete-game-button img {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+}
+
+.add-to-cart {
+  display: flex;
 }
