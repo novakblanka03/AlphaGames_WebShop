@@ -3,15 +3,24 @@
   <div class="card-body">
     <hr>
     <div class="game-grid">
-      <div *ngFor="let game of games" class="game-item" (click)="viewGameDetails(game.id)">
-        <div class="image-container">
-          <a [routerLink]="['/game', game.id]">
-            <img class="game-image" [src]="game.imageUrl" alt="Game Image">
-          </a>
+      <div *ngFor="let game of games" class="game-item">
+        <div class="game-details">
+          <div class="image-container">
+            <a [routerLink]="['/game', game.id]" (click)="viewGameDetails(game.id)">
+              <img class="game-image" [src]="game.imageUrl" alt="Game Image">
+            </a>
+          </div>
+          <div class="game-info">
+            <h6>{{ game.name }}</h6>
+            <p>{{ game.publisherName }}</p>
+            <p>Price: {{ game.price }}</p>
+          </div>
+          <div class="add-to-cart">
+            <button class="add-to-cart-button" (click)="addToCart(game)">
+              <img src="assets/plus.png" alt="Add to Cart">
+            </button>
+          </div>
         </div>
-        <h6>{{ game.name }}</h6>
-        <p>{{ game.publisherName }}</p>
-        <p>Price: {{ game.price }}</p>
       </div>
     </div>
   </div>
