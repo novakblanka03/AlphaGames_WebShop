@@ -29,7 +29,14 @@ export class AppComponent {
 
   goToPage(page: string) {
     this.toggleMenu();
-
     this.router.navigate([page]);
+  }
+
+  redirectToRegister(): void {
+    this.router.navigate(['/register']);
+  }
+
+  redirectToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }

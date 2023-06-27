@@ -12,8 +12,8 @@ export class StoreComponent implements OnInit {
   games: Game[] = [];
 
   constructor(
-    private router: Router,
-    private gameService: GameService
+      private router: Router,
+      private gameService: GameService
   ) {}
 
   ngOnInit() {
@@ -30,9 +30,22 @@ export class StoreComponent implements OnInit {
         console.error(error);
       }
     });
-  }  
+  }
 
   viewGameDetails(gameId: number) {
     this.router.navigate(['/game', gameId]);
   }
+
+  addToCart(game: Game) {
+    // Add the game ID to the cart
+    const cartGameIds: number[] = JSON.parse(localStorage.getItem('cartGameIds') || '[]');
+    cartGameIds.push(game.id);
+    localStorage.setItem('cartGameIds', JSON.stringify(cartGameIds));
+
+    // Redirect to the shopping cart component
+    this.router.navigate(['/shopping-cart']);
+  }
+
+
+
 }

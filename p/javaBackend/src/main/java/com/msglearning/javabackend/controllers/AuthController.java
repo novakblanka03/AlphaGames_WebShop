@@ -50,11 +50,15 @@ public class AuthController {
 
         Optional<User> userOpt = userService.findByEmail(email);
         if (userOpt.isPresent() && PasswordService.checkPassword(password, userOpt.get().getPassword())) {
+            // Get the user ID from the User object
+            String userId = String.valueOf(userOpt.get().getId());
+
             // Create token
-            String token = tokenService.createTokenHeader(userOpt.get().getEmail(), "USER");
+            String token = tokenService.createTokenHeader(userOpt.get().getEmail(), "USER", userId);
             return ResponseEntity.ok(token);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials.");
         }
     }
+
 }
