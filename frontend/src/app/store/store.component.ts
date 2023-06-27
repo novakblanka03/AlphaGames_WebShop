@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Game } from '../models/game.model';
 import { Router } from '@angular/router';
 import { GameService } from '../game/game.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-store',
@@ -13,7 +14,8 @@ export class StoreComponent implements OnInit {
 
   constructor(
       private router: Router,
-      private gameService: GameService
+      private gameService: GameService,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -42,10 +44,15 @@ export class StoreComponent implements OnInit {
     cartGameIds.push(game.id);
     localStorage.setItem('cartGameIds', JSON.stringify(cartGameIds));
 
+    // Force Angular to check whether the game is in the cart
+    this.changeDetector.detectChanges();
+
     // Redirect to the shopping cart component
     this.router.navigate(['/shopping-cart']);
   }
 
-
-
+  isInCart(gameId: number): boolean {
+    const cartGameIds: number[] = JSON.parse(localStorage.getItem('cartGameIds') || '[]');
+    return cartGameIds.includes(gameId);
+  }
 }

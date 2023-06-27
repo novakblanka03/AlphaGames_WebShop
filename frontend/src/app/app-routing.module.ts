@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'library', component: LibraryComponent },
   { path: 'store', component: StoreComponent },
   { path: 'cart', component: ShoppingCartComponent },
-  {path: 'game/:id', component: GameDetailsComponent },
+  {path: 'game/:id', component: GameDetailsComponent }
 ];
 
 @NgModule({

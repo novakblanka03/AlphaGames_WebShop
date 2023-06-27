@@ -16,8 +16,8 @@
             <p>Price: {{ game.price }}</p>
           </div>
           <div class="add-to-cart">
-            <button class="add-to-cart-button" (click)="addToCart(game)">
-              <img src="assets/plus.png" alt="Add to Cart">
+            <button *ngIf="!isInCart(game.id)" class="add-to-cart-button" (click)="addToCart(game)">
+              <img src="../../assets/add_cart.png" alt="Add to Cart">
             </button>
           </div>
         </div>

@@ -31,4 +31,10 @@ export class GameService {
     const url = `${APIEndpointURLs.purchasedGame}/${gameId}`;
     return this.http.get<Game>(url);
   }
+
+  createPurchase(purchase: any): Observable<any> {
+    const url = APIEndpointURLs.purchasedGame;
+    return this.http.post(url, purchase);
+  }
+
 }
