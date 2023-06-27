@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Game } from '../models/game.model';
 import { APIEndpointURLs } from '../api-endpoint-urls';
-import { AccountService } from '../account/component/services/account.service';
 import { PurchasedGame } from '../models/purchased-game.model';
 
 @Injectable({
