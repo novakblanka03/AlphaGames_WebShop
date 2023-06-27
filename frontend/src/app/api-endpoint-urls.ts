@@ -17,4 +17,5 @@ export class APIEndpointURLs {
   public static readonly userPurchases   = APIEndpointURLs.baseUrl + '/purchase/user/';
   public static readonly purchasedGame   = APIEndpointURLs.baseUrl + '/purchase';
   public static readonly getGameById   = APIEndpointURLs.baseUrl + '/game/';
+  public static readonly addGame   = APIEndpointURLs.baseUrl + '/game';
 }

@@ -40,4 +40,9 @@ export class GameService {
     const url = `${APIEndpointURLs.getGameById}/${gameId}`;
     return this.http.delete<void>(url);
   }
+
+  addGame(newGame: Game): Observable<Game> {
+    const url = `${APIEndpointURLs.addGame}`;
+    return this.http.post<Game>(url, newGame);
+  }
 }
