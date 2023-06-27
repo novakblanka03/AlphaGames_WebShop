@@ -65,6 +65,24 @@ header{
   right: 14px;
 }
 
+.signInButton{
+  background-color: #ffffff; /* Set your desired background color */
+  color: #000000; /* Set your desired text color */
+  border: 1px solid #242c37;
+  border-radius: 1000px;
+  text-align: center;
+}
+
+.logInButton{
+  margin-right: 10px;
+}
+
+.signInButton:hover {
+  background-color: #f85252; /* Set the same background color as default */
+  color: #ffffff; /* Set the same text color as default */
+  outline: none; /* Remove the default focus outline */
+}
+
 .menu-icon{
   display: flex;
   flex-direction: column;

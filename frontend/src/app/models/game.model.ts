@@ -1,4 +1,3 @@
-import { Publisher } from './publisher.model';
 
 export interface Game {
     id: number;
@@ -7,7 +6,7 @@ export interface Game {
     description: string;
     imageUrl: string;
     publishDate: string;
-    genreNames: string[];
+    genres: string;
     price: number;
   }
   
