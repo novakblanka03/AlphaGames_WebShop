@@ -16,7 +16,19 @@ import {map} from "rxjs/operators";
 export class StoreComponent implements OnInit {
   games: Game[] = [];
   isAdminUser$: Observable<boolean> = new Observable<boolean>();
-  gameForm: any = {};
+  showAddGameForm: boolean = false;
+
+  newGame: Game = {
+    id: 0,
+    publisherName: '',
+    name: '',
+    description: '',
+    imageUrl: '',
+    publishDate: '',
+    genres: '',
+    price: 0
+  };
+
   constructor(
       private router: Router,
       private gameService: GameService,
@@ -27,6 +39,17 @@ export class StoreComponent implements OnInit {
   ngOnInit() {
     this.getGames();
     this.isAdminUser$ = this.accountService.isAdminUser();
+
+    this.newGame = {
+      id: 0,
+      publisherName: '',
+      name: '',
+      description: '',
+      imageUrl: '',
+      publishDate: '',
+      genres: '',
+      price: 0
+    };
   }
 
   getGames() {
@@ -68,4 +91,24 @@ export class StoreComponent implements OnInit {
     location.reload();
   }
 
+  addGame() {
+    this.gameService.addGame(this.newGame).subscribe(
+        (game: Game) => {
+          console.log('Game added successfully:', game);
+          // Perform any necessary actions after adding the game, such as refreshing the game list
+          this.getGames();
+        },
+        (error) => {
+          console.error('Error adding game:', error);
+        }
+    );
+  }
+
+  openAddGameForm() {
+    this.showAddGameForm = true;
+  }
+
+  closeAddGameForm() {
+    this.showAddGameForm = false;
+  }
 }

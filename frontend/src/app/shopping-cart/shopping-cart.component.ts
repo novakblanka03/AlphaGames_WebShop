@@ -16,6 +16,7 @@ export class ShoppingCartComponent implements OnInit {
   email: string = '';
   phone: string = '';
 
+
   cartGames: Game[] = [];
 
   constructor(
