@@ -3,7 +3,7 @@ import { APIEndpointURLs } from '../../../api-endpoint-urls';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import {catchError, Observable, of, Subject} from 'rxjs';
 import { User } from '../../../users/models/user.model';
 import { map } from 'rxjs/operators';
 
@@ -13,7 +13,9 @@ export class AccountService {
 
   private readonly TOKEN = 'token';
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient,
+              private router: Router
+  ) {
     const token = localStorage.getItem(this.TOKEN);
     if (token) {
       const jwt = new JwtHelperService();
@@ -84,5 +86,20 @@ export class AccountService {
 
   getToken(): string {
     return localStorage.getItem(this.TOKEN) as string;
+  }
+
+  getUserById(userId: string): Observable<User> {
+    const url = `${APIEndpointURLs.userUrl}/${userId}`;
+    return this.http.get<User>(url);
+  }
+
+  isAdminUser(): Observable<boolean> {
+    const userId = this.getUserId();
+    if (userId) {
+      return this.getUserById(userId).pipe(
+          map((user: User) => user.admin)
+      );
+    }
+    return of(false);
   }
 }

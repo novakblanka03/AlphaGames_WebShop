@@ -36,4 +36,8 @@ export class GameService {
     return this.http.post(url, purchase);
   }
 
+  deleteGame(gameId: number): Observable<void> {
+    const url = `${APIEndpointURLs.getGameById}/${gameId}`;
+    return this.http.delete<void>(url);
+  }
 }

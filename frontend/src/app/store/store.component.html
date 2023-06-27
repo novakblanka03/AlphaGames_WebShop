@@ -16,8 +16,11 @@
             <p>Price: {{ game.price }}</p>
           </div>
           <div class="add-to-cart">
-            <button *ngIf="!isInCart(game.id)" class="add-to-cart-button" (click)="addToCart(game)">
+            <button *ngIf="!isInCart(game.id)" class="add-to-cart-button" (click)="addToCart(game)" title="Add to Cart">
               <img ngSrc="./assets/add_cart.png" alt="Add to Cart" height="512" width="512">
+            </button>
+            <button *ngIf="isAdminUser$ | async" class="delete-game-button" (click)="deleteGame(game)" title="Delete Game">
+              <img ngSrc="./assets/delete.png" alt="Add to Cart" height="512" width="512">
             </button>
           </div>
         </div>
@@ -25,3 +28,5 @@
     </div>
   </div>
 </div>
+
+

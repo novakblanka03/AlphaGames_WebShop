@@ -3,6 +3,10 @@ import { Game } from '../models/game.model';
 import { Router } from '@angular/router';
 import { GameService } from '../game/game.service';
 import { ChangeDetectorRef } from '@angular/core';
+import {AccountService} from "../account/component/services/account.service";
+import {Observable, of} from "rxjs";
+import {PurchasedGame} from "../models/purchased-game.model";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-store',
@@ -11,15 +15,18 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class StoreComponent implements OnInit {
   games: Game[] = [];
-
+  isAdminUser$: Observable<boolean> = new Observable<boolean>();
+  gameForm: any = {};
   constructor(
       private router: Router,
       private gameService: GameService,
-    private changeDetector: ChangeDetectorRef
+      private changeDetector: ChangeDetectorRef,
+      private accountService: AccountService
   ) {}
 
   ngOnInit() {
     this.getGames();
+    this.isAdminUser$ = this.accountService.isAdminUser();
   }
 
   getGames() {
@@ -55,4 +62,10 @@ export class StoreComponent implements OnInit {
     const cartGameIds: number[] = JSON.parse(localStorage.getItem('cartGameIds') || '[]');
     return cartGameIds.includes(gameId);
   }
+
+  deleteGame(game: Game) {
+    this.gameService.deleteGame(game.id).subscribe();
+    location.reload();
+  }
+
 }
