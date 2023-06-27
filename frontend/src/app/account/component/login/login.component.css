@@ -54,6 +54,7 @@ h2 {
     font-weight: 100;
     margin: 0 0 1rem;
     text-transform: uppercase;
+    color: black;
 }
 svg {
     height: auto;
@@ -62,6 +63,10 @@ svg {
 }
 a {
     color: #7e8ba3;
+}
+
+p{
+    color: black;
 }
 
 .custom-btn {
@@ -82,9 +87,10 @@ a {
 
 .login {
     background-color: #ffffff;
-    box-shadow: 0 0 250px #000;
+    box-shadow: 0 0 250px #f85252;
     text-align: center;
     padding: 4rem 2rem;
+    border-radius: 25px;
 }
 .login input, select{
     border: 1px solid #242c37;
