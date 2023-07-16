@@ -12,4 +12,4 @@ I mainly contributed to the development of the frontend, but I am familiar with 
 
 If you have any further questions, feel free to *contact me*.
 
-My LinkedIn profile: [LinkedIn](https://www.linkedin.com/in/blanka-nov%C3%A1k-680b5126b/)
+My LinkedIn profile: [LinkedIn](https://www.linkedin.com/in/blanka-bernadett-nov%C3%A1k-680b5126b)
