@@ -2,7 +2,7 @@
 
 This is a repository containing the work of 4 people, including me. 
 
-We have built an almost complete eCommerce application while on an internship at ***msg systems - Targu Mures***.
+We have built an eCommerce application while on an internship at ***msg systems - Targu Mures***.
 
 Frameworks used:
 + Spring Boot
