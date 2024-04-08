@@ -11,5 +11,3 @@ Frameworks used:
 I mainly contributed to the development of the frontend, but I am familiar with both "ends" of this application.
 
 If you have any further questions, feel free to *contact me*.
-
-My LinkedIn profile: [LinkedIn](https://www.linkedin.com/in/blanka-bernadett-nov%C3%A1k-680b5126b)
